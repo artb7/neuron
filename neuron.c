@@ -3,6 +3,7 @@
 #include <math.h>
 #include <string.h>
 
+int num_inp = 4;
 const int inp_dim = 2;
 const int hid_dim = 2;
 const int output_dim = 1;
@@ -36,7 +37,6 @@ int main() {
     printf("hello world!\n");
     float lr = 0.1;
    
-    int num_inp = 4;
     float input[4][2] = {
         {0, 0}, {0, 1}, {1, 0}, {1, 1}};
     float target[4] = {
@@ -70,7 +70,7 @@ int main() {
                     
             float output = output_2[0];
             float loss = criterion(output, target[i]);
-            printf("lr %f loss %f", lr,  loss);
+            printf("lr: %f,  loss: %f\n", lr,  loss);
             return 0;
             
 //            float dw = (output - target) * (output >= 0 ? 1 : 0.2) * input;
@@ -88,6 +88,14 @@ int main() {
 //                   "loss : %f\n", output, target, weight, bias, dw, db, loss);
         }
     }
+
+    for (int i = 0; i < hid_dim; ++i)
+        free(layer_1 + i);
+    free(layer_1);
+
+    for (int i = 0; i < output_dim; ++i)
+        free(layer_2 + i);
+    free(layer_2);
 
     free(output_1);
     free(output_2);
