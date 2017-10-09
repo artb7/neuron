@@ -1,48 +1,46 @@
-#pragma once
+#ifndef _LAYER_H_
+#define _LAYER_H_
 
-
-struct Result_backward {
-    float* grad;
-    int size;
-};
-
-class MulLayer {
+#include <stdint.h>
+#include "Tensor.h"
+/*
+class Layer {
 public:
-    MulLayer();
-    ~MulLayer();
+	Layer();
+	~Layer();
 
-    float forward(float x, float y);
-    Result_backward backward(float dout);
+	Tensor forward(const Tensor& x);
+	Tensor backward(const Tensor& d);
 
 private:
-    float x, y;
-    struct Result_backward result_backward;
 };
+*/
 
-
-class AddLayer {
+class Linear {
 public:
-    AddLayer();
-    ~AddLayer();
+	Linear(uint32_t in_dim, uint32_t out_dim);
+	~Linear();
 
-    float forward(float x, float y);
-    Result_backward backward(float dout);
+	Tensor forward(const Tensor& x);
+	Tensor backward(const Tensor& d);
 
 private:
-    float x, y;
-    struct Result_backward result_backward;
+	Tensor weight;
+	Tensor bias;
+	Tensor input;
 };
-
 
 class LeakyReLU {
-publid:
-    LeakyReLU();
-    ~LeakyReLU();
+public:
+	LeakyReLU();
+	~LeakyReLU();
 
-    float forward(float x);
-    Result_backward backward(float dout);
+	Tensor forward(const Tensor& x);
+	Tensor backward(const Tensor& d);
 
 private:
-    struct Result_backward result_backward;
+	Tensor mask;
+};
 
-}
+#endif _LAYER_H_
+

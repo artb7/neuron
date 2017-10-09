@@ -1,45 +1,57 @@
 #include <iostream>
 
+#include "Tensor.h"
 
-int main() {
-    float apple = 100;
-    float orange = 150;
-    float num_apple = 2;
-    float num_orange = 3;
-    float tax = 1.1;
-
-    // layers
-    MulLayer mul_apple_layer;
-    MulLayer mul_orange_layer;
-    AddLayer add_layer;
-    MulLayer mul_tax_layer;
-    
-
-    // forward
-    float apple_price = mul_apple_layer.forward(apple, num_apple);
-    float orange_price = mul_orange_layer.forward(orange, num_orange);
-    float price_before_tax = add_layer.forward(apple_price, orange_price);
-    float price = mul_tax_layer.forward(price_before_tax, tax);
-
-    // backward
-    float dprice = 1;
-    Result_backward d1 = mul_tax_layer.backward(dprice); 
-    Result_backward d2 = add_layer.backward(d1.grad[0]);
-    Result_backward d3 = mul_apple_layer.backward(d2.grad[0]);
-    Result_backward d4 = mul_orange_layer.backward(d2.grad[1]);
-    float dtax = d1.grad[1]; 
-    float dapple = d3.grad[0];
-    float dnum_apple = d3.grad[1];
-    float dorange = d4.grad[0];
-    float dnum_orange = d4.grad[1];
-
-    std::cout << "price : " << price << std::endl;
-    std::cout << "dapple : " << dapple << std::endl;
-    std::cout << "dnum_apple : " << dnum_apple << std::endl;
-    std::cout << "dorange: " << dorange << std::endl;
-    std::cout << "dnum_orange: " << dnum_orange << std::endl;
-    std::cout << "dtax : " << dtax << std::endl;
-
-    return 0;
+void print(Tensor t) {
+	uint32_t dim0 = t.get_dim0();
+	uint32_t dim1 = t.get_dim1();
+	for (int i = 0; i < (int)dim0; ++i) {
+		for (int j = 0; j < (int)dim1; ++j) {
+			std::cout << t(i, j) << " ";	
+		}
+		std::cout << std::endl;
+	}
+	return;
 }
 
+int main() {
+
+	uint32_t dim0 = 2, dim1 = 2;
+	float a_data[dim0 * dim1] = {1, 1, 1, 1};
+	float b_data[dim0 * dim1] = {0, 1, 2, 3};
+	Tensor A(dim0, dim1, a_data);
+	Tensor B(dim0, dim1, b_data);
+	/*	
+	std::cout << "Tensor A + B: " << std::endl;
+	print(A + B);
+	std::cout << "Tensor A - B: " << std::endl;
+	print(A - B);
+	std::cout << "Tensor A * B: " << std::endl;
+	print(A * B);
+	std::cout << "Tensor A / B: " << std::endl;
+	print(A / B);
+	*/
+	
+	std::cout << "Tensor A : " << std::endl;
+	print(A);
+	std::cout << "Tensor B : " << std::endl;
+	print(B);
+	Tensor C = A.matmul(B);
+	std::cout << "Tensor A.matmul(B) : " << std::endl;
+	print(C);
+
+	/*
+	std::cout << "Tensor A > B: " << std::endl;
+	print(A > B);	
+	std::cout << "Tensor A >= B: " << std::endl;
+	print(A >= B);	
+	std::cout << "Tensor A < B: " << std::endl;
+	print(A < B);	
+	std::cout << "Tensor A <= B: " << std::endl;
+	print(A <= B);	
+	A = B;
+	std::cout << "Tensor A = B: " << std::endl;
+	print(A);	
+	*/
+	return 0;
+}

@@ -1,8 +1,11 @@
-test: test.o Matrix.o
-	g++ -Wall -g -o test test.o Matrix.o
+main : main.o Tensor.o
+	g++ -Wall -g main.o Tensor.o -o main
 
-test.o: test.cpp Matrix.h
-	g++ -Wall -g -c test.cpp  
+main.o : main.cpp Tensor.h
+	g++ -Wall -g -c main.cpp
 
-Matrix.o: Matrix.cpp Matrix.h
-	g++ -Wall -g -c Matrix.cpp Matrix.h
+Tensor.o : Tensor.cpp Tensor.h
+	g++ -Wall -g -c Tensor.cpp
+
+clean :
+	\rm *.o main
