@@ -1,11 +1,18 @@
-main : main.o Tensor.o
-	g++ -Wall -g main.o Tensor.o -o main
+CC = g++
+CFLAGS = -W -Wall -g -std=c++11
+TARGET = main
 
-main.o : main.cpp Tensor.h
-	g++ -Wall -g -c main.cpp
+$(TARGET) : main.o Layers.o Tensor.o
+	$(CC) $(CFLAGS) -o $(TARGET) main.o Layers.o Tensor.o
+
+main.o : main.cpp Layers.h Tensor.h 
+	$(CC) $(CFLAGS) -c main.cpp
+
+Layers.o : Layers.cpp Layers.h Tensor.h
+	$(CC) $(CFLAGS) -c Layers.cpp
 
 Tensor.o : Tensor.cpp Tensor.h
-	g++ -Wall -g -c Tensor.cpp
+	$(CC) $(CFLAGS) -c Tensor.cpp
 
 clean :
 	\rm *.o main

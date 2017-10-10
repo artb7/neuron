@@ -42,5 +42,4 @@ private:
 	Tensor mask;
 };
 
-#endif _LAYER_H_
-
+#endif //_LAYER_H_

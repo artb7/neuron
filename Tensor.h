@@ -1,11 +1,15 @@
-#ifndef _MATRIX_H_
-#define _MATRIX_H_
+#ifndef _TENSOR_H_
+#define _TENSOR_H_
 
-#include <stdint.h>
 #include <assert.h>
+#include <cstddef>
+#include <iostream>
+#include <stdint.h>
 
-class Tensor{
+
+class Tensor {
 public: 
+        Tensor();
 	Tensor(uint32_t dim0, uint32_t dim1, float* data);
 	~Tensor();
 	Tensor(const Tensor& other);
@@ -23,6 +27,7 @@ public:
 	Tensor operator/(const Tensor& other);
 	Tensor operator<(const Tensor& other);
 	Tensor operator<=(const Tensor& other);
+	Tensor operator<=(float num);
 	Tensor operator>(const Tensor& other);
 	Tensor operator>=(const Tensor& other);
 
@@ -35,4 +40,4 @@ private:
 	uint32_t dim0;
 	uint32_t dim1;
 };
-#endif // _MATRIX_H_
+#endif // _TENSOR_H_

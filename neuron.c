@@ -38,9 +38,11 @@ int main() {
     float lr = 0.1;
    
     float input[4][2] = {
-        {0, 0}, {0, 1}, {1, 0}, {1, 1}};
+        {0, 0}, {0, 1}, {1, 0}, {1, 1}
+    };
     float target[4] = {
-        0, 1, 1, 0};
+        0, 1, 1, 0
+    };
 
     float ** layer_1 = (float**)malloc(sizeof(float*) * hid_dim);
     for (int i = 0; i < hid_dim; ++i)

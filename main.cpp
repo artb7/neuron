@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Tensor.h"
+#include "Layers.h"
 
 void print(Tensor t) {
 	uint32_t dim0 = t.get_dim0();
@@ -39,6 +40,10 @@ int main() {
 	Tensor C = A.matmul(B);
 	std::cout << "Tensor A.matmul(B) : " << std::endl;
 	print(C);
+
+        LeakyReLU l_relu = LeakyReLU();
+	std::cout << "Tensor LeakyReLU(A) : " << std::endl;
+	print(l_relu.forward(A));
 
 	/*
 	std::cout << "Tensor A > B: " << std::endl;

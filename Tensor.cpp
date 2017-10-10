@@ -1,18 +1,25 @@
 #include "Tensor.h"
 
+Tensor::Tensor() {
+    this->dim0 = 0;
+    this->dim1 = 0;
+    this->data = nullptr;
+}
+
 Tensor::Tensor(uint32_t dim0, uint32_t dim1, float* data) {
-	this->dim0 = dim0;
-	this->dim1 = dim1;
-	this->data = new float[dim0 * dim1];
-	for (int i = 0; i < (int)dim0; ++i) {
-		for (int j = 0; j < (int)dim1; ++j) {
-			this->data[i * dim0 + j] = data[i * dim0 + j];
-		}
-	}
+    this->dim0 = dim0;
+    this->dim1 = dim1;
+    this->data = new float[dim0 * dim1];
+    for (int i = 0; i < (int)dim0; ++i) {
+            for (int j = 0; j < (int)dim1; ++j) {
+                    this->data[i * dim0 + j] = data[i * dim0 + j];
+            }
+    }
 }
 
 Tensor::~Tensor() {
-	delete data;
+    if (data != nullptr)
+        delete data;
 }
 
 Tensor::Tensor(const Tensor& other) {
