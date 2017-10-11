@@ -25,8 +25,6 @@ int main() {
 	/*	
 	std::cout << "Tensor A + B: " << std::endl;
 	print(A + B);
-	std::cout << "Tensor A - B: " << std::endl;
-	print(A - B);
 	std::cout << "Tensor A * B: " << std::endl;
 	print(A * B);
 	std::cout << "Tensor A / B: " << std::endl;
@@ -41,9 +39,14 @@ int main() {
 	std::cout << "Tensor A.matmul(B) : " << std::endl;
 	print(C);
 
+	std::cout << "Tensor A - B: " << std::endl;
+        Tensor D = A - B;
+	print(D);
         LeakyReLU l_relu = LeakyReLU();
-	std::cout << "Tensor LeakyReLU(A) : " << std::endl;
-	print(l_relu.forward(A));
+	std::cout << "Tensor forward of LeakyReLU(A - B) : " << std::endl;
+	print(l_relu.forward(D));
+	std::cout << "Tensor backward of LeakyReLU(A - B) when d = 1 : " << std::endl;
+	print(l_relu.backward(A));
 
 	/*
 	std::cout << "Tensor A > B: " << std::endl;

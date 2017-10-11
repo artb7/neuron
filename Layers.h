@@ -1,6 +1,7 @@
 #ifndef _LAYER_H_
 #define _LAYER_H_
 
+#include <cmath>
 #include <stdint.h>
 #include "Tensor.h"
 /*
@@ -18,28 +19,41 @@ private:
 
 class Linear {
 public:
-	Linear(uint32_t in_dim, uint32_t out_dim);
-	~Linear();
+    Linear(uint32_t in_dim, uint32_t out_dim);
+    ~Linear();
 
-	Tensor forward(const Tensor& x);
-	Tensor backward(const Tensor& d);
+    Tensor forward(const Tensor& x);
+    Tensor backward(const Tensor& d);
 
 private:
-	Tensor weight;
-	Tensor bias;
-	Tensor input;
+    Tensor weight;
+    Tensor bias;
+    Tensor input;
 };
 
 class LeakyReLU {
 public:
-	LeakyReLU();
-	~LeakyReLU();
+    LeakyReLU();
+    ~LeakyReLU();
 
-	Tensor forward(const Tensor& x);
-	Tensor backward(const Tensor& d);
+    Tensor forward(Tensor& x);
+    Tensor backward(const Tensor& d);
 
 private:
-	Tensor mask;
+    Tensor mask;
+};
+
+
+class Sigmoid {
+public:
+    Sigmoid();
+    ~Sigmoid();
+
+    Tensor forward(Tensor& x);
+    Tensor backward(const Tensor& d);
+
+private:
+    Tensor mask;
 };
 
 #endif //_LAYER_H_

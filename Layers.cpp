@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "Layers.h"
 /*
 Linear::Linear(uint32_t in_dim, uint32_t out_dim) {
@@ -16,21 +18,44 @@ Linear::Linear(uint32_t in_dim, uint32_t out_dim) {
 */
 
 LeakyReLU::LeakyReLU() {
+    //this->mask = nullptr;
 }
 LeakyReLU::~LeakyReLU() {
 }
 
-Tensor LeakyReLU::forward(const Tensor& x) {
+Tensor LeakyReLU::forward(Tensor& x) {
+
     this->mask = (x <= 0);
+    //std::cout << "hello" << std::endl;
+    // TODO more simple 
     Tensor out = x;
-    out[this->mask] = out[this->mask] * 0.2;
-    return out;
+    Tensor neg_result = out[this->mask] * 0.2;
+    Tensor reverse_mask = reverse_boolean(this->mask);
+    Tensor pos_result = out[reverse_mask];
+    return neg_result + pos_result;
 }
 
 Tensor LeakyReLU::backward(const Tensor& d) {
+
+    //dx[this->mask] = dx[this->mask] * 0.2;
     Tensor dx = d;
-    dx[this->mask] = dx[this->mask] * 0.2;
-    return dx;
+    Tensor neg_result = dx[this->mask] * 0.2;
+    Tensor reverse_mask = reverse_boolean(this->mask);
+    Tensor pos_result = dx[reverse_mask];
+    return neg_result + pos_result;
+}
+
+
+Sigmoid::Sigmoid() {
+}
+Sigmoid::~Sigmoid() {
+}
+
+Tensor Sigmoid::forward(Tensor& x) {
+
+    return     
+}
+Tensor Sigmoid::backward(const Tensor& d) {
 }
 
 /*

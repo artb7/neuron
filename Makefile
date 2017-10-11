@@ -15,4 +15,4 @@ Tensor.o : Tensor.cpp Tensor.h
 	$(CC) $(CFLAGS) -c Tensor.cpp
 
 clean :
-	\rm *.o main
+	\rm *.gch *.o main

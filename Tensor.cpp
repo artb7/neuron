@@ -48,6 +48,7 @@ float Tensor::operator()(uint32_t i, uint32_t j) {
 Tensor Tensor::operator[](const Tensor& other) {
 	assert (dim0 == other.dim0 && dim1 == other.dim1);
 	float result_data[dim0 * dim1] = {0,};
+        // TODO 1 -> true
 	for (int i = 0; i < (int)dim0; ++i) {
 		for (int j = 0; j < (int)dim1; ++j) {
 			int index = i * dim0 + j;
@@ -57,6 +58,8 @@ Tensor Tensor::operator[](const Tensor& other) {
 				result_data[index] = 0;
 		}
 	}
+        // TODO return tensor is not self.
+        // how to implement numpy indexing
 	return Tensor(dim0, dim1, result_data);
 }
 
@@ -73,6 +76,7 @@ Tensor Tensor::operator+(const Tensor& other) {
 	}
 	return Tensor(dim0, dim1, result_data);
 }
+
 
 Tensor Tensor::operator-(const Tensor& other) {
 	assert (dim0 == other.dim0 && dim1 == other.dim1);
@@ -102,6 +106,7 @@ Tensor Tensor::operator*(const Tensor& other) {
 	return Tensor(dim0, dim1, result_data);
 }
 
+
 Tensor Tensor::operator/(const Tensor& other) {
 	assert (dim0 == other.dim0 && dim1 == other.dim1);
 	for (int i = 0; i < (int)dim0; ++i) {
@@ -121,6 +126,73 @@ Tensor Tensor::operator/(const Tensor& other) {
 		}
 	}
 	return Tensor(dim0, dim1, result_data);
+}
+
+
+Tensor Tensor::operator+(float num) {
+
+    float result_data[dim0 * dim1] = {0,};
+    for (int i = 0; i < (int)dim0; ++i) {
+            for (int j = 0; j < (int)dim1; ++j) {
+                int index = i * dim0 + j;
+                result_data[index] =\
+                    data[index] + num;
+            }
+    }
+    return Tensor(dim0, dim1, result_data);
+}
+
+
+Tensor Tensor::operator+(float num) {
+
+    float result_data[dim0 * dim1] = {0,};
+    for (int i = 0; i < (int)dim0; ++i) {
+        for (int j = 0; j < (int)dim1; ++j) {
+            int index = i * dim0 + j;
+            result_data[index] = data[index] + num;
+        }
+    }
+    return Tensor(dim0, dim1, result_data);
+}
+
+
+Tensor Tensor::operator-(float num) {
+
+    float result_data[dim0 * dim1] = {0,};
+    for (int i = 0; i < (int)dim0; ++i) {
+        for (int j = 0; j < (int)dim1; ++j) {
+            int index = i * dim0 + j;
+            result_data[index] = data[index] - num;
+        }
+    }
+    return Tensor(dim0, dim1, result_data);
+}
+
+
+Tensor Tensor::operator*(float num) {
+    float result_data[dim0 * dim1] = {0,};
+    //float* result_data = new float[dim0 * dim1];
+    for (int i = 0; i < (int)dim0; ++i) {
+        for (int j = 0; j < (int)dim1; ++j) {
+            result_data[i * dim0 + j] = data[i * dim0 + j] * num;
+        }
+    }
+    return Tensor(dim0, dim1, result_data);
+}
+
+
+Tensor Tensor::operator/(float num) {
+
+    assert (num != 0);
+
+    float result_data[dim0 * dim1] = {0,};
+    for (int i = 0; i < (int)dim0; ++i) {
+        for (int j = 0; j < (int)dim1; ++j) {
+            int index = i * dim0 + j;
+            result_data[index] = data[index] / num;
+        }
+    }
+    return Tensor(dim0, dim1, result_data);
 }
 
 
@@ -152,6 +224,23 @@ Tensor Tensor::operator<=(const Tensor& other) {
 	}
 	return Tensor(dim0, dim1, result_data);
 }
+
+
+Tensor Tensor::operator<=(float num) {
+	float result_data[dim0 * dim1] = {0,};
+	//float* result_data = new float[dim0 * dim1];
+	for (int i = 0; i < (int)dim0; ++i) {
+		for (int j = 0; j < (int)dim1; ++j) {
+			int index = i * dim0 + j;
+			result_data[index] =\
+			    (data[index] <= num) ?\
+				1.0 : 0.0;
+		}
+	}
+	return Tensor(dim0, dim1, result_data);
+}
+
+
 Tensor Tensor::operator>(const Tensor& other) {
 	assert (dim0 == other.dim0 && dim1 == other.dim1);
 	float result_data[dim0 * dim1] = {0,};
@@ -182,7 +271,12 @@ Tensor Tensor::operator>=(const Tensor& other) {
 }
 
 Tensor& Tensor::operator=(const Tensor& other) {
-	assert (dim0 == other.dim0 && dim1 == other.dim1);
+        if (dim0 != other.dim0 || dim1 != other.dim1) {
+            dim0 = other.dim0;
+            dim1 = other.dim1;
+            if (data != nullptr) delete data; 
+            data = new float[dim0 * dim1];
+        }
 	for (int i = 0; i < (int)dim0; ++i) {
 		for (int j = 0; j < (int)dim1; ++j) {
 			int index = i * dim0 + j;
@@ -206,4 +300,19 @@ Tensor Tensor::matmul(const Tensor& other) {
 		}
 	}
 	return Tensor(dim0, other.dim1, result_data);
+}
+
+
+Tensor reverse_boolean(Tensor tensor) {
+    uint32_t dim0 = tensor.get_dim0(); 
+    uint32_t dim1 = tensor.get_dim1(); 
+    float result_data[dim0 * dim1] = {0,};
+    for (int i = 0; i < (int)dim0; ++i) {
+        for (int j = 0; j < (int)dim1; ++j) {
+            int index = dim0 * i + j;
+            result_data[index] =\
+                    tensor(i, j) == 1 ? 0 : 1;
+        }
+    }
+    return Tensor(dim0, dim1, result_data);
 }

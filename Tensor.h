@@ -2,6 +2,7 @@
 #define _TENSOR_H_
 
 #include <assert.h>
+#include <cmath>
 #include <cstddef>
 #include <iostream>
 #include <stdint.h>
@@ -25,6 +26,10 @@ public:
 	Tensor operator-(const Tensor& other);
 	Tensor operator*(const Tensor& other);
 	Tensor operator/(const Tensor& other);
+	Tensor operator+(float num);
+	Tensor operator-(float num);
+	Tensor operator*(float num);
+	Tensor operator/(float num);
 	Tensor operator<(const Tensor& other);
 	Tensor operator<=(const Tensor& other);
 	Tensor operator<=(float num);
@@ -40,4 +45,11 @@ private:
 	uint32_t dim0;
 	uint32_t dim1;
 };
+
+Tensor operator*(float f, Tensor tensor) {
+    return tensor * f;
+}
+
+Tensor reverse_boolean(Tensor x);
+
 #endif // _TENSOR_H_
