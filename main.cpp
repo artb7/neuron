@@ -20,8 +20,10 @@ int main() {
 	uint32_t dim0 = 2, dim1 = 2;
 	float a_data[dim0 * dim1] = {1, 1, 1, 1};
 	float b_data[dim0 * dim1] = {0, 1, 2, 3};
+        float inp_data[dim0 * dim1] = {0, 0, -5, 5};
 	Tensor A(dim0, dim1, a_data);
 	Tensor B(dim0, dim1, b_data);
+        Tensor inp(dim0, dim1, inp_data);
 	/*	
 	std::cout << "Tensor A + B: " << std::endl;
 	print(A + B);
@@ -29,15 +31,17 @@ int main() {
 	print(A * B);
 	std::cout << "Tensor A / B: " << std::endl;
 	print(A / B);
-	*/
-	
-	std::cout << "Tensor A : " << std::endl;
-	print(A);
-	std::cout << "Tensor B : " << std::endl;
-	print(B);
-	Tensor C = A.matmul(B);
-	std::cout << "Tensor A.matmul(B) : " << std::endl;
-	print(C);
+	std::cout << "Tensor A > B: " << std::endl;
+	print(A > B);	
+	std::cout << "Tensor A >= B: " << std::endl;
+	print(A >= B);	
+	std::cout << "Tensor A < B: " << std::endl;
+	print(A < B);	
+	std::cout << "Tensor A <= B: " << std::endl;
+	print(A <= B);	
+	std::cout << "Tensor A = B: " << std::endl;
+	A = B;
+	print(A);	
 
 	std::cout << "Tensor A - B: " << std::endl;
         Tensor D = A - B;
@@ -48,18 +52,16 @@ int main() {
 	std::cout << "Tensor backward of LeakyReLU(A - B) when d = 1 : " << std::endl;
 	print(l_relu.backward(A));
 
-	/*
-	std::cout << "Tensor A > B: " << std::endl;
-	print(A > B);	
-	std::cout << "Tensor A >= B: " << std::endl;
-	print(A >= B);	
-	std::cout << "Tensor A < B: " << std::endl;
-	print(A < B);	
-	std::cout << "Tensor A <= B: " << std::endl;
-	print(A <= B);	
-	A = B;
-	std::cout << "Tensor A = B: " << std::endl;
-	print(A);	
+	std::cout << "Tensor inp: " << std::endl;
+	print(inp);
+        Sigmoid sigmoid = Sigmoid();
+	std::cout << "Tensor forward of sigmoid(inp) : " << std::endl;
+	print(sigmoid.forward(inp));
+	std::cout << "Tensor backward of sigmoid(inp) when d = 1 : " << std::endl;
+	print(sigmoid.backward(A));
 	*/
+
+
+
 	return 0;
 }

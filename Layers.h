@@ -28,7 +28,9 @@ public:
 private:
     Tensor weight;
     Tensor bias;
-    Tensor input;
+    Tensor x;
+    Tensor dW;
+    Tensor db;
 };
 
 class LeakyReLU {
@@ -53,7 +55,7 @@ public:
     Tensor backward(const Tensor& d);
 
 private:
-    Tensor mask;
+    Tensor out;
 };
 
 #endif //_LAYER_H_

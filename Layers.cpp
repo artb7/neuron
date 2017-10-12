@@ -1,21 +1,39 @@
 #include <iostream>
 
 #include "Layers.h"
-/*
+
 Linear::Linear(uint32_t in_dim, uint32_t out_dim) {
-    float* weight_zero_data = new float[in_dim * out_dim];
+    //TODO weight initialization
+    float* weight_init_data = new float[in_dim * out_dim];
     for (int i = 0; i < in_dim * out_dim; ++i)
-        weight_zero_data[i] = 0;
+        weight_init_data[i] = 1.0;
 
-    float* bias_zero_data = new float[out_dim];
+    float* bias_init_data = new float[out_dim];
     for (int i = 0; i < out_dim; ++i)
-        bias_zero_data[i] = 1;
+        bias_init_data[i] = 1.0;
 
-    this->weight = Tensor(in_dim, out_dim, weight_zero_data)
-    this->bias = Tensor(in_dim, out_dim, bias_zero_data)
-    this->input = Tensor(in_dim, out_dim)
+    this->weight = Tensor(in_dim, out_dim, weight_init_data)
+    this->bias = Tensor(in_dim, out_dim, bias_init_data)
 }
-*/
+Linear::~Linear() {
+}
+
+Tensor Linear::forward(const Tensor& x) {
+    assert (x.get_dim1() == (this->weight).get_dim0());
+    this->x = x;   
+    Tensor out = x.dot(this->weight) + this->bias;
+
+    return out;
+}
+
+Tensor Linear::backward(const Tensor& d) {
+    this->db = d; 
+    this->dx = d.dot((this->weight).T);  
+    this->dw = ((this->x).T).dot(d);
+
+    return dx;
+}
+
 
 LeakyReLU::LeakyReLU() {
     //this->mask = nullptr;
@@ -52,10 +70,12 @@ Sigmoid::~Sigmoid() {
 }
 
 Tensor Sigmoid::forward(Tensor& x) {
-
-    return     
+    this->out = (1. / (1. + exp(-x)));
+    return this->out;
 }
 Tensor Sigmoid::backward(const Tensor& d) {
+    Tensor dx = d;
+    return dx * this->out * (1.0 - this->out);
 }
 
 /*

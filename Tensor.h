@@ -18,6 +18,8 @@ public:
 	uint32_t get_dim0();
 	uint32_t get_dim1();
 
+	Tensor operator-();
+
 	float operator()(uint32_t i, uint32_t j);
 
 	Tensor operator[](const Tensor& other);
@@ -38,7 +40,7 @@ public:
 
 	Tensor& operator=(const Tensor& other);
 
-	Tensor matmul(const Tensor& other);
+	Tensor dot(const Tensor& other);
 
 private:
 	float* data;
@@ -46,10 +48,12 @@ private:
 	uint32_t dim1;
 };
 
-Tensor operator*(float f, Tensor tensor) {
-    return tensor * f;
-}
 
-Tensor reverse_boolean(Tensor x);
+Tensor operator+(float num, Tensor tensor);
+Tensor operator-(float num, Tensor tensor);
+Tensor operator*(float num, Tensor tensor);
+Tensor operator/(float num, Tensor tensor);
+Tensor reverse_boolean(Tensor tensor);
+Tensor exp(Tensor tensor);
 
 #endif // _TENSOR_H_
