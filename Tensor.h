@@ -40,7 +40,9 @@ public:
 
 	Tensor& operator=(const Tensor& other);
 
+        Tensor sum(int axis);
 	Tensor dot(const Tensor& other);
+        Tensor T();
 
 private:
 	float* data;

@@ -22,8 +22,8 @@ public:
     Linear(uint32_t in_dim, uint32_t out_dim);
     ~Linear();
 
-    Tensor forward(const Tensor& x);
-    Tensor backward(const Tensor& d);
+    Tensor forward(Tensor& x);
+    Tensor backward(Tensor& d);
 
 private:
     Tensor weight;

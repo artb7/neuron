@@ -2,23 +2,36 @@
 
 #include "Layers.h"
 
+
+void tensor_print(Tensor t) {
+	uint32_t dim0 = t.get_dim0();
+	uint32_t dim1 = t.get_dim1();
+	for (int i = 0; i < (int)dim0; ++i) {
+		for (int j = 0; j < (int)dim1; ++j) {
+			std::cout << t(i, j) << " ";	
+		}
+		std::cout << std::endl;
+	}
+	return;
+}
+
 Linear::Linear(uint32_t in_dim, uint32_t out_dim) {
     //TODO weight initialization
     float* weight_init_data = new float[in_dim * out_dim];
-    for (int i = 0; i < in_dim * out_dim; ++i)
+    for (int i = 0; i < (int)(in_dim * out_dim); ++i)
         weight_init_data[i] = 1.0;
 
     float* bias_init_data = new float[out_dim];
-    for (int i = 0; i < out_dim; ++i)
+    for (int i = 0; i < (int)out_dim; ++i)
         bias_init_data[i] = 1.0;
 
-    this->weight = Tensor(in_dim, out_dim, weight_init_data)
-    this->bias = Tensor(in_dim, out_dim, bias_init_data)
+    this->weight = Tensor(in_dim, out_dim, weight_init_data);
+    this->bias = Tensor(1, out_dim, bias_init_data);
 }
 Linear::~Linear() {
 }
 
-Tensor Linear::forward(const Tensor& x) {
+Tensor Linear::forward(Tensor& x) {
     assert (x.get_dim1() == (this->weight).get_dim0());
     this->x = x;   
     Tensor out = x.dot(this->weight) + this->bias;
@@ -26,10 +39,15 @@ Tensor Linear::forward(const Tensor& x) {
     return out;
 }
 
-Tensor Linear::backward(const Tensor& d) {
-    this->db = d; 
-    this->dx = d.dot((this->weight).T);  
-    this->dw = ((this->x).T).dot(d);
+Tensor Linear::backward(Tensor& dout) {
+    Tensor dx = dout.dot((this->weight).T());  
+    this->db = dout.sum(0); 
+    this->dW = ((this->x).T()).dot(dout);
+
+    std::cout << "Tensor db: " << std::endl;
+    tensor_print(this->db);
+    std::cout << "Tensor dW: " << std::endl;
+    tensor_print(this->dW);
 
     return dx;
 }
