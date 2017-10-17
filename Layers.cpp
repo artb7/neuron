@@ -44,10 +44,12 @@ Tensor Linear::backward(Tensor& dout) {
     this->db = dout.sum(0); 
     this->dW = ((this->x).T()).dot(dout);
 
+    /*
     std::cout << "Tensor db: " << std::endl;
     tensor_print(this->db);
     std::cout << "Tensor dW: " << std::endl;
     tensor_print(this->dW);
+    */
 
     return dx;
 }
@@ -91,9 +93,35 @@ Tensor Sigmoid::forward(Tensor& x) {
     this->out = (1. / (1. + exp(-x)));
     return this->out;
 }
-Tensor Sigmoid::backward(const Tensor& d) {
-    Tensor dx = d;
+Tensor Sigmoid::backward(const Tensor& dout) {
+    Tensor dx = dout;
     return dx * this->out * (1.0 - this->out);
+}
+
+SoftmaxWithLoss::SoftmaxWithLoss() {
+    
+}
+
+SoftmaxWithLoss::~SoftmaxWithLoss() {
+
+}
+
+float SoftmaxWithLoss::compute(Tensor& output, int target) {
+    //TODO : Consider batch learning
+    //
+    Tensor logit = exp(output - output.max());
+    Tensor S = logit.sum();
+    this->y = logit / S(0, 0);
+    this->t = target;
+
+    float loss = -1 * y(target, 1) / S(0, 0);
+    return loss;
+}
+
+Tensor SoftmaxWithLoss::backward(const Tensor& dout) {
+    Tensor dx = this->y;
+    //dx(this->t, 1) = dx(this->t, 1) - 1.0;
+    return dx;
 }
 
 /*

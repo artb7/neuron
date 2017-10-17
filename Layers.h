@@ -23,7 +23,7 @@ public:
     ~Linear();
 
     Tensor forward(Tensor& x);
-    Tensor backward(Tensor& d);
+    Tensor backward(Tensor& dout);
 
 private:
     Tensor weight;
@@ -39,7 +39,7 @@ public:
     ~LeakyReLU();
 
     Tensor forward(Tensor& x);
-    Tensor backward(const Tensor& d);
+    Tensor backward(const Tensor& dout);
 
 private:
     Tensor mask;
@@ -52,10 +52,22 @@ public:
     ~Sigmoid();
 
     Tensor forward(Tensor& x);
-    Tensor backward(const Tensor& d);
+    Tensor backward(const Tensor& dout);
 
 private:
     Tensor out;
+};
+
+class SoftmaxWithLoss {
+public:
+    SoftmaxWithLoss();
+    ~SoftmaxWithLoss();
+    float compute(Tensor& output, int target);
+    Tensor backward(const Tensor& dout);
+
+private:    
+    Tensor y;
+    int t;
 };
 
 #endif //_LAYER_H_

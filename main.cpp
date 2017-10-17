@@ -30,6 +30,12 @@ int main() {
         Tensor inp(dim0, dim1, inp_data);
         Tensor dout(2, 3, dout_data);
 
+	std::cout << "Tensor A: " << std::endl;
+	print(A);
+        A(0,0) = 0;
+	std::cout << "Tensor A: " << std::endl;
+	print(A);
+
         /*
 	std::cout << "Tensor A + onedim: " << std::endl;
 	print(A + onedim);

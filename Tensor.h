@@ -40,8 +40,9 @@ public:
 
 	Tensor& operator=(const Tensor& other);
 
-        Tensor sum(int axis);
 	Tensor dot(const Tensor& other);
+        Tensor max();
+        Tensor sum(int axis=-1);
         Tensor T();
 
 private:
@@ -50,12 +51,13 @@ private:
 	uint32_t dim1;
 };
 
-
+Tensor zeros(uint32_t dim0, uint32_t dim1);
 Tensor operator+(float num, Tensor tensor);
 Tensor operator-(float num, Tensor tensor);
 Tensor operator*(float num, Tensor tensor);
 Tensor operator/(float num, Tensor tensor);
 Tensor reverse_boolean(Tensor tensor);
 Tensor exp(Tensor tensor);
+Tensor log(Tensor tensor);
 
 #endif // _TENSOR_H_
