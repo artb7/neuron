@@ -1,1 +1,5 @@
 *.o
+neuron.c
+main
+
+*.swp

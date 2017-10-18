@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "Tensor.h"
-#include "Layers.h"
+#include "Tensor.hpp"
+#include "Layers.hpp"
 
 void print(Tensor t) {
 	uint32_t dim0 = t.get_dim0();
@@ -20,21 +20,24 @@ int main() {
 	uint32_t dim0 = 2, dim1 = 2;
 	float a_data[dim0 * dim1] = {1, 1, 1, 1};
 	float b_data[dim0 * dim1] = {0, 1, 2, 3};
-        float inp_data[dim0 * dim1] = {0, 0, -5, 5};
+        //float out_data[10] = {0.1, 0.05, 0.6, 0.0, 0.05, 0.1, 0.0, 0.1, 0.0, 0.0};
+        float out_data[10] = {0.1, 0.05, 0.1, 0.0, 0.05, 0.1, 0.0, 0.6, 0.0, 0.0};
         float dout_data[2 * 3] = {1, 1, 1, 1, 1, 1};
         float one_data[2] = {1, 2};
 
 	Tensor A(dim0, dim1, a_data);
 	Tensor B(dim0, dim1, b_data);
         Tensor onedim(1, 2, one_data);
-        Tensor inp(dim0, dim1, inp_data);
+        Tensor output(10, 1, out_data);
         Tensor dout(2, 3, dout_data);
 
+        /*
 	std::cout << "Tensor A: " << std::endl;
 	print(A);
         A(0,0) = 0;
 	std::cout << "Tensor A: " << std::endl;
 	print(A);
+        */
 
         /*
 	std::cout << "Tensor A + onedim: " << std::endl;
@@ -104,6 +107,7 @@ int main() {
 	print(sigmoid.backward(A));
 	*/
         
+        /*
 	std::cout << "Tensor inp: " << std::endl;
 	print(inp);
         Linear linear = Linear(2, 3);
@@ -111,6 +115,19 @@ int main() {
 	print(linear.forward(inp));
 	std::cout << "Tensor backward of linear(inp) when d = 1 : " << std::endl;
 	print(linear.backward(dout));
+        */
+
+        SoftmaxWithLoss criterion = SoftmaxWithLoss();
+        int target = 2;
+	std::cout << "Tensor output: " << std::endl;
+	print(output);
+	std::cout << "Tensor target: " << std::endl;
+        std::cout << target << std::endl;
+	std::cout << "Tensor criterion.compute(output, target): " << std::endl;
+        std::cout << criterion.compute(output, target) << std::endl;
+	std::cout << "Tensor criterion.backward(): " << std::endl;
+	print(criterion.backward(A));
+
 
 
 	return 0;

@@ -3,7 +3,7 @@
 
 #include <cmath>
 #include <stdint.h>
-#include "Tensor.h"
+#include "Tensor.hpp"
 /*
 class Layer {
 public:
@@ -68,6 +68,7 @@ public:
 private:    
     Tensor y;
     int t;
+    Tensor dout;
 };
 
 #endif //_LAYER_H_

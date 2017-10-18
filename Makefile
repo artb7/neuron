@@ -1,17 +1,17 @@
 CC = g++
-CFLAGS = -W -Wall -g -std=c++11
+CFLAGS = -W -Wall -g -std=c++17
 TARGET = main
 
 $(TARGET) : main.o Layers.o Tensor.o
 	$(CC) $(CFLAGS) -o $(TARGET) main.o Layers.o Tensor.o
 
-main.o : main.cpp Layers.h Tensor.h 
+main.o : main.cpp Layers.hpp Tensor.hpp 
 	$(CC) $(CFLAGS) -c main.cpp
 
-Layers.o : Layers.cpp Layers.h Tensor.h
+Layers.o : Layers.cpp Layers.hpp Tensor.hpp
 	$(CC) $(CFLAGS) -c Layers.cpp
 
-Tensor.o : Tensor.cpp Tensor.h
+Tensor.o : Tensor.cpp Tensor.hpp
 	$(CC) $(CFLAGS) -c Tensor.cpp
 
 clean :

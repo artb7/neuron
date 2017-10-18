@@ -18,9 +18,11 @@ public:
 	uint32_t get_dim0();
 	uint32_t get_dim1();
 
-	Tensor operator-();
+        //void operator << (const Tensor& t);
 
-	float operator()(uint32_t i, uint32_t j);
+	Tensor operator - ();
+
+	float& operator()(uint32_t i, uint32_t j);
 
 	Tensor operator[](const Tensor& other);
 

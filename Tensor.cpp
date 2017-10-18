@@ -1,4 +1,4 @@
-#include "Tensor.h"
+#include "Tensor.hpp"
 
 Tensor::Tensor() {
     this->dim0 = 0;
@@ -41,11 +41,12 @@ Tensor::Tensor(const Tensor& other) {
 }
 
 uint32_t Tensor::get_dim0() { 
-	return this->dim0;
+    return this->dim0;
 }
 uint32_t Tensor::get_dim1() {
-	return this->dim1;
+    return this->dim1;
 }
+
 
 Tensor Tensor::operator-() {
     float result_data[dim0 * dim1] = {0,};
@@ -119,11 +120,28 @@ Tensor Tensor::operator-(const Tensor& other) {
             (dim0 == other.dim0 && other.dim1 == 1) or\
             (dim1 == other.dim1 && other.dim0 == 1));
     float result_data[dim0 * dim1] = {0,};
-    //float* result_data = new float[dim0 * dim1];
-    for (int i = 0; i < (int)dim0; ++i) {
-        for (int j = 0; j < (int)dim1; ++j) {
-            int index = dim1 * i + j;
-            result_data[index] = data[index] - other.data[index];
+    if (dim0 == other.dim0 && other.dim1 == 1) {
+        for (int i = 0; i < (int)dim0; ++i) {
+            for (int j = 0; j < (int)dim1; ++j) {
+                int index = dim1 * i + j;
+                result_data[index] = data[index] - other.data[i];
+            }
+        }
+    }
+    else if (dim1 == other.dim1 && other.dim0 == 1) {
+        for (int i = 0; i < (int)dim0; ++i) {
+            for (int j = 0; j < (int)dim1; ++j) {
+                int index = dim1 * i + j;
+                result_data[index] = data[index] - other.data[j];
+            }
+        }
+    }
+    else {
+        for (int i = 0; i < (int)dim0; ++i) {
+            for (int j = 0; j < (int)dim1; ++j) {
+                int index = dim1 * i + j;
+                result_data[index] = data[index] - other.data[index];
+            }
         }
     }
     return Tensor(dim0, dim1, result_data);

@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "Layers.h"
+#include "Layers.hpp"
 
 
 void tensor_print(Tensor t) {
@@ -111,16 +111,30 @@ float SoftmaxWithLoss::compute(Tensor& output, int target) {
     //
     Tensor logit = exp(output - output.max());
     Tensor S = logit.sum();
+
     this->y = logit / S(0, 0);
     this->t = target;
+    float loss = -1 * std::log(y(target, 0) + 1e-7);
 
-    float loss = -1 * y(target, 1) / S(0, 0);
+    /*
+    std::cout << "output - output.max()" << std::endl;
+    tensor_print(output - output.max());
+    std::cout << "logit: " << std::endl;
+    tensor_print(logit);
+    std::cout << "S: " << std::endl;
+    tensor_print(S);
+    std::cout << "y: " << std::endl;
+    tensor_print(this->y);
+    std::cout << "loss: " << loss  << std::endl;
+    */
+
     return loss;
 }
 
 Tensor SoftmaxWithLoss::backward(const Tensor& dout) {
+    this->dout = dout;
     Tensor dx = this->y;
-    //dx(this->t, 1) = dx(this->t, 1) - 1.0;
+    dx(this->t, 0) = dx(this->t, 0) - 1.0;
     return dx;
 }
 
