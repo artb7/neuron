@@ -1,11 +1,9 @@
-#include <iostream>
-
 #include "Layers.hpp"
 
 
-void tensor_print(Tensor t) {
-	uint32_t dim0 = t.get_dim0();
-	uint32_t dim1 = t.get_dim1();
+void tensor_print(Mat2d t) {
+	uint32_t dim0 = t.get_row();
+	uint32_t dim1 = t.get_col();
 	for (int i = 0; i < (int)dim0; ++i) {
 		for (int j = 0; j < (int)dim1; ++j) {
 			std::cout << t(i, j) << " ";	
@@ -25,29 +23,29 @@ Linear::Linear(uint32_t in_dim, uint32_t out_dim) {
     for (int i = 0; i < (int)out_dim; ++i)
         bias_init_data[i] = 1.0;
 
-    this->weight = Tensor(in_dim, out_dim, weight_init_data);
-    this->bias = Tensor(1, out_dim, bias_init_data);
+    this->weight = Mat2d(in_dim, out_dim, weight_init_data);
+    this->bias = Mat2d(1, out_dim, bias_init_data);
 }
 Linear::~Linear() {
 }
 
-Tensor Linear::forward(Tensor& x) {
-    assert (x.get_dim1() == (this->weight).get_dim0());
+Mat2d Linear::forward(Mat2d& x) {
+    assert (x.get_col() == (this->weight).get_row());
     this->x = x;   
-    Tensor out = x.dot(this->weight) + this->bias;
+    Mat2d out = x.dot(this->weight) + this->bias;
 
     return out;
 }
 
-Tensor Linear::backward(Tensor& dout) {
-    Tensor dx = dout.dot((this->weight).T());  
+Mat2d Linear::backward(Mat2d& dout) {
+    Mat2d dx = dout.dot((this->weight).T());  
     this->db = dout.sum(0); 
     this->dW = ((this->x).T()).dot(dout);
 
     /*
-    std::cout << "Tensor db: " << std::endl;
+    std::cout << "Mat2d db: " << std::endl;
     tensor_print(this->db);
-    std::cout << "Tensor dW: " << std::endl;
+    std::cout << "Mat2d dW: " << std::endl;
     tensor_print(this->dW);
     */
 
@@ -61,25 +59,25 @@ LeakyReLU::LeakyReLU() {
 LeakyReLU::~LeakyReLU() {
 }
 
-Tensor LeakyReLU::forward(Tensor& x) {
+Mat2d LeakyReLU::forward(Mat2d& x) {
 
     this->mask = (x <= 0);
     //std::cout << "hello" << std::endl;
     // TODO more simple 
-    Tensor out = x;
-    Tensor neg_result = out[this->mask] * 0.2;
-    Tensor reverse_mask = reverse_boolean(this->mask);
-    Tensor pos_result = out[reverse_mask];
+    Mat2d out = x;
+    Mat2d neg_result = out[this->mask] * 0.2;
+    Mat2d reverse_mask = reverse_boolean(this->mask);
+    Mat2d pos_result = out[reverse_mask];
     return neg_result + pos_result;
 }
 
-Tensor LeakyReLU::backward(const Tensor& d) {
+Mat2d LeakyReLU::backward(const Mat2d& d) {
 
     //dx[this->mask] = dx[this->mask] * 0.2;
-    Tensor dx = d;
-    Tensor neg_result = dx[this->mask] * 0.2;
-    Tensor reverse_mask = reverse_boolean(this->mask);
-    Tensor pos_result = dx[reverse_mask];
+    Mat2d dx = d;
+    Mat2d neg_result = dx[this->mask] * 0.2;
+    Mat2d reverse_mask = reverse_boolean(this->mask);
+    Mat2d pos_result = dx[reverse_mask];
     return neg_result + pos_result;
 }
 
@@ -89,12 +87,12 @@ Sigmoid::Sigmoid() {
 Sigmoid::~Sigmoid() {
 }
 
-Tensor Sigmoid::forward(Tensor& x) {
+Mat2d Sigmoid::forward(Mat2d& x) {
     this->out = (1. / (1. + exp(-x)));
     return this->out;
 }
-Tensor Sigmoid::backward(const Tensor& dout) {
-    Tensor dx = dout;
+Mat2d Sigmoid::backward(const Mat2d& dout) {
+    Mat2d dx = dout;
     return dx * this->out * (1.0 - this->out);
 }
 
@@ -106,11 +104,11 @@ SoftmaxWithLoss::~SoftmaxWithLoss() {
 
 }
 
-float SoftmaxWithLoss::compute(Tensor& output, int target) {
+float SoftmaxWithLoss::compute(Mat2d& output, int target) {
     //TODO : Consider batch learning
     //
-    Tensor logit = exp(output - output.max());
-    Tensor S = logit.sum();
+    Mat2d logit = exp(output - output.max());
+    Mat2d S = logit.sum();
 
     this->y = logit / S(0, 0);
     this->t = target;
@@ -131,9 +129,9 @@ float SoftmaxWithLoss::compute(Tensor& output, int target) {
     return loss;
 }
 
-Tensor SoftmaxWithLoss::backward(const Tensor& dout) {
+Mat2d SoftmaxWithLoss::backward(const Mat2d& dout) {
     this->dout = dout;
-    Tensor dx = this->y;
+    Mat2d dx = this->y;
     dx(this->t, 0) = dx(this->t, 0) - 1.0;
     return dx;
 }

@@ -1,5 +1,7 @@
-*.o
+boost*
 neuron.c
+test_mat2d
 main
 
+*.o
 *.swp

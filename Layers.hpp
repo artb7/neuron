@@ -2,16 +2,18 @@
 #define _LAYER_H_
 
 #include <cmath>
+#include <iostream>
 #include <stdint.h>
-#include "Tensor.hpp"
+#include "Mat2d.hpp"
+
 /*
 class Layer {
 public:
 	Layer();
 	~Layer();
 
-	Tensor forward(const Tensor& x);
-	Tensor backward(const Tensor& d);
+	Mat2d forward(const Mat2d& x);
+	Mat2d backward(const Mat2d& d);
 
 private:
 };
@@ -22,15 +24,15 @@ public:
     Linear(uint32_t in_dim, uint32_t out_dim);
     ~Linear();
 
-    Tensor forward(Tensor& x);
-    Tensor backward(Tensor& dout);
+    Mat2d forward(Mat2d& x);
+    Mat2d backward(Mat2d& dout);
 
 private:
-    Tensor weight;
-    Tensor bias;
-    Tensor x;
-    Tensor dW;
-    Tensor db;
+    Mat2d weight;
+    Mat2d bias;
+    Mat2d x;
+    Mat2d dW;
+    Mat2d db;
 };
 
 class LeakyReLU {
@@ -38,11 +40,11 @@ public:
     LeakyReLU();
     ~LeakyReLU();
 
-    Tensor forward(Tensor& x);
-    Tensor backward(const Tensor& dout);
+    Mat2d forward(Mat2d& x);
+    Mat2d backward(const Mat2d& dout);
 
 private:
-    Tensor mask;
+    Mat2d mask;
 };
 
 
@@ -51,24 +53,24 @@ public:
     Sigmoid();
     ~Sigmoid();
 
-    Tensor forward(Tensor& x);
-    Tensor backward(const Tensor& dout);
+    Mat2d forward(Mat2d& x);
+    Mat2d backward(const Mat2d& dout);
 
 private:
-    Tensor out;
+    Mat2d out;
 };
 
 class SoftmaxWithLoss {
 public:
     SoftmaxWithLoss();
     ~SoftmaxWithLoss();
-    float compute(Tensor& output, int target);
-    Tensor backward(const Tensor& dout);
+    float compute(Mat2d& output, int target);
+    Mat2d backward(const Mat2d& dout);
 
 private:    
-    Tensor y;
+    Mat2d y;
     int t;
-    Tensor dout;
+    Mat2d dout;
 };
 
 #endif //_LAYER_H_

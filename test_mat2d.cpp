@@ -17,7 +17,7 @@ void print(Mat2d t) {
 
 int main() {
 
-    // [Test] operator 
+    // [Test] operator with Mat2d
     uint32_t row = 2, col = 2;
     float a_data[row * col] = {1, 1, 1, 1};
     float b_data[row * col] = {1, 2, 3, 4};
@@ -30,6 +30,8 @@ int main() {
     print(B);
     std::cout << "Mat2d A + B: " << std::endl;
     print(A + B);
+    std::cout << "Mat2d A - B: " << std::endl;
+    print(A - B);
     std::cout << "Mat2d A * B: " << std::endl;
     print(A * B);
     std::cout << "Mat2d A / B: " << std::endl;
@@ -47,18 +49,33 @@ int main() {
     Mat2d C = B;
     print(C);	
 
+    // [Test] operator with num 
+    float num = 5;
+    std::cout << "Mat2d B: " << std::endl;
+    print(B);
+    std::cout << "Mat2d B + 5: " << std::endl;
+    print(B + num);
+    std::cout << "Mat2d B - 5: " << std::endl;
+    print(B - num);
+    std::cout << "Mat2d B * 5: " << std::endl;
+    print(B * num);
+    std::cout << "Mat2d B / 5: " << std::endl;
+    print(B / num);
+
     // [Test] vector broadcast
+    float onevec_data[2] = {1, 2};
+    Mat2d onevec(1, 2, onevec_data);
+
     std::cout << "Mat2d A: " << std::endl;
     print(A);
+    std::cout << "Mat2d onevec: " << std::endl;
+    print(onevec);
     std::cout << "Mat2d A + onevec: " << std::endl;
     print(A + onevec);
     std::cout << "Mat2d A + onevec.T(): " << std::endl;
     print(A + onevec.T());
 
     // [Test] indexing reference
-    float onevec_data[2] = {1, 2};
-    Mat2d onevec(1, 2, onevec_data);
-
     std::cout << "Mat2d A: " << std::endl;
     print(A);
     std::cout << "Mat2d A(0,0) <- 0: " << std::endl;
@@ -82,52 +99,13 @@ int main() {
     print(t1);
     std::cout << "Mat2d t1.T(): " << std::endl;
     print(t1.T());
+
+    // [Test] dot operator 
     std::cout << "Mat2d t1.dot(t1.T()): " << std::endl;
     print(t1.dot(t1.T()));
 
-    //float out_data[10] = {0.1, 0.05, 0.6, 0.0, 0.05, 0.1, 0.0, 0.1, 0.0, 0.0};
-    float out_data[10] = {0.1, 0.05, 0.1, 0.0, 0.05, 0.1, 0.0, 0.6, 0.0, 0.0};
-    float inp_data[2 * 2] = {0, 0, -5, 5};
-    float dout_data[2 * 3] = {1, 1, 1, 1, 1, 1};
 
-    Mat2d inp(2, 2, inp_data);
-    Mat2d output(10, 1, out_data);
-    Mat2d dout(2, 3, dout_data);
-
-    LeakyReLU l_relu = LeakyReLU();
-    std::cout << "Mat2d inp" << std::endl;
-    print(inp);
-    std::cout << "Mat2d forward of LeakyReLU(inp) : " << std::endl;
-    print(l_relu.forward(inp));
-    std::cout << "Mat2d backward of LeakyReLU(inp) when dout = 1 : " << std::endl;
-    print(l_relu.backward(dout));
-
-    std::cout << "Mat2d inp: " << std::endl;
-    print(inp);
-    Sigmoid sigmoid = Sigmoid();
-    std::cout << "Mat2d forward of sigmoid(inp) : " << std::endl;
-    print(sigmoid.forward(inp));
-    std::cout << "Mat2d backward of sigmoid(inp) when d = 1 : " << std::endl;
-    print(sigmoid.backward(A));
-
-    std::cout << "Mat2d inp: " << std::endl;
-    print(inp);
-    Linear linear = Linear(2, 3);
-    std::cout << "Mat2d forward of linear(inp) : " << std::endl;
-    print(linear.forward(inp));
-    std::cout << "Mat2d backward of linear(inp) when d = 1 : " << std::endl;
-    print(linear.backward(dout));
-
-    SoftmaxWithLoss criterion = SoftmaxWithLoss();
-    int target = 2;
-    std::cout << "Mat2d output: " << std::endl;
-    print(output);
-    std::cout << "Mat2d target: " << std::endl;
-    std::cout << target << std::endl;
-    std::cout << "Mat2d criterion.compute(output, target): " << std::endl;
-    std::cout << criterion.compute(output, target) << std::endl;
-    std::cout << "Mat2d criterion.backward(): " << std::endl;
-    print(criterion.backward(A));
+    // TODO : other operator and function regard to Mat2d  test
 
     return 0;
 }
