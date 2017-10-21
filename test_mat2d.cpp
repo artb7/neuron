@@ -3,18 +3,6 @@
 #include "Mat2d.hpp"
 
 
-void print(Mat2d<float> t) {
-    uint32_t dim0 = t.get_row();
-    uint32_t dim1 = t.get_col();
-    for (int i = 0; i < (int)dim0; ++i) {
-        for (int j = 0; j < (int)dim1; ++j) {
-            std::cout << t(i, j) << " ";	
-        }
-        std::cout << std::endl;
-    }
-    return;
-}
-
 int main() {
 
     // [Test] operator with Mat2d<float>
@@ -25,62 +13,62 @@ int main() {
     Mat2d<float> B(row, col, b_data);
 
     std::cout << "Mat2d<float> A: " << std::endl;
-    print(A);
+    A.print();
     std::cout << "Mat2d<float> B: " << std::endl;
-    print(B);
+    B.print();
     std::cout << "Mat2d<float> A + B: " << std::endl;
-    print(A + B);
+    (A + B).print();
     std::cout << "Mat2d<float> A - B: " << std::endl;
-    print(A - B);
+    (A - B).print();
     std::cout << "Mat2d<float> A * B: " << std::endl;
-    print(A * B);
+    (A * B).print();
     std::cout << "Mat2d<float> A / B: " << std::endl;
-    print(A / B);
+    (A / B).print();
     std::cout << "Mat2d<float> A > B: " << std::endl;
-    print(A > B);	
+    (A > B).print();	
     std::cout << "Mat2d<float> A >= B: " << std::endl;
-    print(A >= B);	
+    (A >= B).print();	
     std::cout << "Mat2d<float> A < B: " << std::endl;
-    print(A < B);	
+    (A < B).print();	
     std::cout << "Mat2d<float> A <= B: " << std::endl;
-    print(A <= B);	
+    (A <= B).print();	
     std::cout << "Mat2d<float> C <- B: " << std::endl;
     std::cout << "Mat2d<float> C: " << std::endl;
     Mat2d<float> C = B;
-    print(C);	
+    C.print();	
 
     // [Test] operator with num 
     float num = 5;
     std::cout << "Mat2d<float> B: " << std::endl;
-    print(B);
+    B.print();
     std::cout << "Mat2d<float> B + 5: " << std::endl;
-    print(B + num);
+    (B + num).print();
     std::cout << "Mat2d<float> B - 5: " << std::endl;
-    print(B - num);
+    (B - num).print();
     std::cout << "Mat2d<float> B * 5: " << std::endl;
-    print(B * num);
+    (B * num).print();
     std::cout << "Mat2d<float> B / 5: " << std::endl;
-    print(B / num);
+    (B / num).print();
 
     // [Test] vector broadcast
     float onevec_data[2] = {1, 2};
     Mat2d<float> onevec(1, 2, onevec_data);
 
     std::cout << "Mat2d<float> A: " << std::endl;
-    print(A);
+    A.print();
     std::cout << "Mat2d<float> onevec: " << std::endl;
-    print(onevec);
+    onevec.print();
     std::cout << "Mat2d<float> A + onevec: " << std::endl;
-    print(A + onevec);
+    (A + onevec).print();
     std::cout << "Mat2d<float> A + onevec.T(): " << std::endl;
-    print(A + onevec.T());
+    (A + onevec.T()).print();
 
     // [Test] indexing reference
     std::cout << "Mat2d<float> A: " << std::endl;
-    print(A);
+    A.print();
     std::cout << "Mat2d<float> A(0,0) <- 0: " << std::endl;
     A(0,0) = 0;
-    print(A);
+    A.print();
 
     // [Test] sum 
     uint32_t dim0_t = 2, dim1_t = 4;
@@ -88,21 +76,21 @@ int main() {
     Mat2d<float> t1(dim0_t, dim1_t, t_data_1);
 
     std::cout << "Mat2d<float> t1: " << std::endl;
-    print(t1);
+    t1.print();
     std::cout << "Mat2d<float> t1.sum(0): " << std::endl;
-    print(t1.sum(0));
+    (t1.sum(0)).print();
     std::cout << "Mat2d<float> t1.sum(1): " << std::endl;
-    print(t1.sum(1));
+    (t1.sum(1)).print();
 
     // [Test] transpose 
     std::cout << "Mat2d<float> t1: " << std::endl;
-    print(t1);
+    t1.print();
     std::cout << "Mat2d<float> t1.T(): " << std::endl;
-    print(t1.T());
+    (t1.T()).print();
 
     // [Test] dot operator 
     std::cout << "Mat2d<float> t1.dot(t1.T()): " << std::endl;
-    print(t1.dot(t1.T()));
+    (t1.dot(t1.T())).print();
 
 
     // TODO : other operator and function regard to Mat2d<float>  test

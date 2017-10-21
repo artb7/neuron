@@ -1,0 +1,23 @@
+The Art Of Neuron
+
+-optimization
+-visualization
+
+Layers.hpp
+Mat2d.hpp
+(Mat3d.hpp)
+(Tensor.hpp)
+
+<future work>
+    Tensor (4 dim Mat for (B, C, W, H))
+    Image data loading
+    Conv2d
+
+2017.10.21
+    Mat2d Template ver.
+    Prepare training of MLP with XOR data 
+
+2017.10.22
+    Prepare training of MLP with XOR data 
+
+

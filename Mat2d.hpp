@@ -119,6 +119,8 @@ public:
 	Mat2d dot(const Mat2d& other);
     Mat2d T();
 
+    void print();
+
 private:
 	data_type* data;
 	uint32_t row;
@@ -676,6 +678,19 @@ Mat2d<data_type> Mat2d<data_type>::T() {
 }
 
 
+template <class data_type>
+void Mat2d<data_type>::print() {
+    for (int i = 0; i < (int)row; ++i) {
+        for (int j = 0; j < (int)col; ++j) {
+            int index = i * col + j;
+            std::cout << data[index] << " ";	
+        }
+        std::cout << std::endl;
+    }
+    return;
+}
+
+
 /* 
  * Mat2d operator 
  *
@@ -686,11 +701,11 @@ Mat2d<data_type> zeros(uint32_t row, uint32_t col) {
     return Mat2d<data_type>(row, col, zero_data);
 }
 template <class data_type>
-Mat2d<data_type> operator+(data_type num, Mat2d<data_type> tensor) {
+Mat2d<data_type> operator + (data_type num, Mat2d<data_type> tensor) {
     return tensor + num;
 }
 template <class data_type>
-Mat2d<data_type> operator-(data_type num, Mat2d<data_type> tensor) {
+Mat2d<data_type> operator - (data_type num, Mat2d<data_type> tensor) {
     uint32_t row = tensor.get_row(); 
     uint32_t col = tensor.get_col(); 
     data_type num_data[row * col] = {0, };  
@@ -704,11 +719,11 @@ Mat2d<data_type> operator-(data_type num, Mat2d<data_type> tensor) {
     return num_tensor - tensor;
 }
 template <class data_type>
-Mat2d<data_type> operator*(data_type num, Mat2d<data_type> tensor) {
+Mat2d<data_type> operator * (data_type num, Mat2d<data_type> tensor) {
     return tensor * num;
 }
 template <class data_type>
-Mat2d<data_type> operator/(data_type num, Mat2d<data_type> tensor) {
+Mat2d<data_type> operator / (data_type num, Mat2d<data_type> tensor) {
     uint32_t row = tensor.get_row(); 
     uint32_t col = tensor.get_col(); 
     data_type num_data[row * col] = {0, };  

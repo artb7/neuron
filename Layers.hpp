@@ -3,7 +3,9 @@
 
 #include <cmath>
 #include <iostream>
+#include <random>
 #include <stdint.h>
+
 #include "Mat2d.hpp"
 
 /*
@@ -12,8 +14,8 @@ public:
 	Layer();
 	~Layer();
 
-	Mat2d forward(const Mat2d& x);
-	Mat2d backward(const Mat2d& d);
+	Mat2d<float> forward(const Mat2d<float>& x);
+	Mat2d<float> backward(const Mat2d<float>& d);
 
 private:
 };
@@ -24,27 +26,29 @@ public:
     Linear(uint32_t in_dim, uint32_t out_dim);
     ~Linear();
 
-    Mat2d forward(Mat2d& x);
-    Mat2d backward(Mat2d& dout);
+    Mat2d<float> forward(Mat2d<float>& x);
+    Mat2d<float> backward(Mat2d<float>& dout);
 
 private:
-    Mat2d weight;
-    Mat2d bias;
-    Mat2d x;
-    Mat2d dW;
-    Mat2d db;
+    Mat2d<float> weight;
+    Mat2d<float> bias;
+    Mat2d<float> x;
+    Mat2d<float> dW;
+    Mat2d<float> db;
 };
+
 
 class LeakyReLU {
 public:
     LeakyReLU();
     ~LeakyReLU();
 
-    Mat2d forward(Mat2d& x);
-    Mat2d backward(const Mat2d& dout);
+    Mat2d<float> forward(Mat2d<float>& x);
+    Mat2d<float> backward(const Mat2d<float>& dout);
 
 private:
-    Mat2d mask;
+    //TODO float mask no problem?
+    Mat2d<float> mask;
 };
 
 
@@ -53,24 +57,24 @@ public:
     Sigmoid();
     ~Sigmoid();
 
-    Mat2d forward(Mat2d& x);
-    Mat2d backward(const Mat2d& dout);
+    Mat2d<float> forward(Mat2d<float>& x);
+    Mat2d<float> backward(const Mat2d<float>& dout);
 
 private:
-    Mat2d out;
+    Mat2d<float> out;
 };
 
 class SoftmaxWithLoss {
 public:
     SoftmaxWithLoss();
     ~SoftmaxWithLoss();
-    float compute(Mat2d& output, int target);
-    Mat2d backward(const Mat2d& dout);
+    float compute(Mat2d<float>& output, int target);
+    Mat2d<float> backward(const Mat2d<float>& dout);
 
 private:    
-    Mat2d y;
+    Mat2d<float> y;
     int t;
-    Mat2d dout;
+    Mat2d<float> dout;
 };
 
 #endif //_LAYER_H_
