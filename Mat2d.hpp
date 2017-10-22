@@ -8,8 +8,7 @@
 #include <stdint.h>
 
 /*
-class Mat2d {
-public: 
+class Mat2d { public: 
     Mat2d();
 	Mat2d(uint32_t row, uint32_t col, float* data);
 	~Mat2d();
@@ -71,7 +70,6 @@ Mat2d log(Mat2d tensor);
 */
 
 /******* Template version *******/
-//TODO
 template <class data_type=float>
 class Mat2d {
 public: 
@@ -87,6 +85,7 @@ public:
     //void operator << (const Mat2d& t);
 
 	Mat2d operator - ();
+    Mat2d operator ! ();
 
 	data_type& operator () (uint32_t row, uint32_t col);
 	Mat2d operator [] (const Mat2d& other);
@@ -206,6 +205,19 @@ Mat2d<data_type> Mat2d<data_type>::operator - () {
         for (int j = 0; j < (int)col; ++j) {
             int index = i * col + j;
             result_data[index] = -data[index];
+        }
+    }
+    return Mat2d<data_type>(row, col, result_data);
+}
+
+template <class data_type>
+Mat2d<data_type> Mat2d<data_type>::operator ! () {
+    //TODO improve
+    data_type result_data[row * col] = {0,};
+    for (int i = 0; i < (int)row; ++i) {
+        for (int j = 0; j < (int)col; ++j) {
+            int index = i * col + j;
+            result_data[index] = (data[index] == 1) ? 0 : 1;
         }
     }
     return Mat2d<data_type>(row, col, result_data);
@@ -691,21 +703,64 @@ void Mat2d<data_type>::print() {
 }
 
 
-/* 
- * Mat2d operator 
- *
- */
-template <class data_type>
-Mat2d<data_type> zeros(uint32_t row, uint32_t col) {
-    data_type zero_data[row * col] = {0,};
-    return Mat2d<data_type>(row, col, zero_data);
+/******* Mat2d operator  *******/
+namespace Mat {
+
+    inline
+    Mat2d<float> zeros(uint32_t row, uint32_t col) {
+        float zero_data[row * col] = {0,};
+        return Mat2d<float>(row, col, zero_data);
+    }
+
+    inline
+    Mat2d<float> ones(uint32_t row, uint32_t col) {
+        float one_data[row * col] = {0,};
+        for (int i = 0; i < int(row * col); ++i) {
+            one_data[i] = 1;
+        }
+        return Mat2d<float>(row, col, one_data);
+    }
+
+    template <class data_type>
+    Mat2d<data_type> exp(Mat2d<data_type> tensor) {
+        //TODO how to get reference input.
+        uint32_t row = tensor.get_row(); 
+        uint32_t col = tensor.get_col(); 
+        data_type result_data[row * col] = {0,};
+        for (int i = 0; i < (int)row; ++i) {
+            for (int j = 0; j < (int)col; ++j) {
+                int index = i * col + j;
+                result_data[index] = std::exp(tensor(i, j));
+            }
+        }
+        return Mat2d<data_type>(row, col, result_data);
+    }
+
+    template <class data_type>
+    Mat2d<data_type> log(Mat2d<data_type> tensor) {
+        uint32_t row = tensor.get_row(); 
+        uint32_t col = tensor.get_col(); 
+        data_type result_data[row * col] = {0,};
+        for (int i = 0; i < (int)row; ++i) {
+            for (int j = 0; j < (int)col; ++j) {
+                int index = i * col + j;
+                result_data[index] = std::log(tensor(i, j));
+            }
+        }
+        return Mat2d<data_type>(row, col, result_data);
+    }
 }
+
+
+/******* operator *******/
+
 template <class data_type>
-Mat2d<data_type> operator + (data_type num, Mat2d<data_type> tensor) {
+Mat2d<data_type> operator + (float num, Mat2d<data_type> tensor) {
     return tensor + num;
 }
+
 template <class data_type>
-Mat2d<data_type> operator - (data_type num, Mat2d<data_type> tensor) {
+Mat2d<data_type> operator - (float num, Mat2d<data_type> tensor) {
     uint32_t row = tensor.get_row(); 
     uint32_t col = tensor.get_col(); 
     data_type num_data[row * col] = {0, };  
@@ -718,12 +773,14 @@ Mat2d<data_type> operator - (data_type num, Mat2d<data_type> tensor) {
     Mat2d<data_type> num_tensor(row, col, num_data);
     return num_tensor - tensor;
 }
+
 template <class data_type>
-Mat2d<data_type> operator * (data_type num, Mat2d<data_type> tensor) {
+Mat2d<data_type> operator * (float num, Mat2d<data_type> tensor) {
     return tensor * num;
 }
+
 template <class data_type>
-Mat2d<data_type> operator / (data_type num, Mat2d<data_type> tensor) {
+Mat2d<data_type> operator / (float num, Mat2d<data_type> tensor) {
     uint32_t row = tensor.get_row(); 
     uint32_t col = tensor.get_col(); 
     data_type num_data[row * col] = {0, };  
@@ -735,50 +792,6 @@ Mat2d<data_type> operator / (data_type num, Mat2d<data_type> tensor) {
     }
     Mat2d<data_type> num_tensor(row, col, num_data);
     return num_tensor / tensor;
-}
-
-template <class data_type>
-Mat2d<data_type> reverse_boolean(Mat2d<data_type> tensor) {
-    uint32_t row = tensor.get_row(); 
-    uint32_t col = tensor.get_col(); 
-    data_type result_data[row * col] = {0,};
-    for (int i = 0; i < (int)row; ++i) {
-        for (int j = 0; j < (int)col; ++j) {
-            int index = i * col + j;
-            result_data[index] =\
-                    tensor(i, j) == 1 ? 0 : 1;
-        }
-    }
-    return Mat2d<data_type>(row, col, result_data);
-}
-
-template <class data_type>
-Mat2d<data_type> exp(Mat2d<data_type> tensor) {
-    //TODO how to get reference input.
-    uint32_t row = tensor.get_row(); 
-    uint32_t col = tensor.get_col(); 
-    data_type result_data[row * col] = {0,};
-    for (int i = 0; i < (int)row; ++i) {
-        for (int j = 0; j < (int)col; ++j) {
-            int index = i * col + j;
-            result_data[index] = std::exp(tensor(i, j));
-        }
-    }
-    return Mat2d<data_type>(row, col, result_data);
-}
-
-template <class data_type>
-Mat2d<data_type> log(Mat2d<data_type> tensor) {
-    uint32_t row = tensor.get_row(); 
-    uint32_t col = tensor.get_col(); 
-    data_type result_data[row * col] = {0,};
-    for (int i = 0; i < (int)row; ++i) {
-        for (int j = 0; j < (int)col; ++j) {
-            int index = i * col + j;
-            result_data[index] = std::log(tensor(i, j));
-        }
-    }
-    return Mat2d<data_type>(row, col, result_data);
 }
 
 #endif //_MAT2D_H_

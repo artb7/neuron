@@ -8,20 +8,21 @@
 
 #include "Mat2d.hpp"
 
-/*
+
+//TODO make use of hepa and release resource
 class Layer {
 public:
 	Layer();
 	~Layer();
 
-	Mat2d<float> forward(const Mat2d<float>& x);
-	Mat2d<float> backward(const Mat2d<float>& d);
+	virtual Mat2d<float> forward(const Mat2d<float>& x) = 0;
+	virtual Mat2d<float> backward(const Mat2d<float>& dout) = 0;
 
 private:
 };
-*/
 
-class Linear {
+
+class Linear : public {
 public:
     Linear(uint32_t in_dim, uint32_t out_dim);
     ~Linear();
@@ -32,13 +33,13 @@ public:
 private:
     Mat2d<float> weight;
     Mat2d<float> bias;
-    Mat2d<float> x;
     Mat2d<float> dW;
     Mat2d<float> db;
+    Mat2d<float> x;
 };
 
 
-class LeakyReLU {
+class LeakyReLU : public {
 public:
     LeakyReLU();
     ~LeakyReLU();
@@ -52,7 +53,7 @@ private:
 };
 
 
-class Sigmoid {
+class Sigmoid : public {
 public:
     Sigmoid();
     ~Sigmoid();
@@ -72,9 +73,9 @@ public:
     Mat2d<float> backward(const Mat2d<float>& dout);
 
 private:    
-    Mat2d<float> y;
     int t;
     Mat2d<float> dout;
+    Mat2d<float> y;
 };
 
 #endif //_LAYER_H_

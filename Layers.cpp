@@ -1,5 +1,10 @@
 #include "Layers.hpp"
 
+Layer::Layer() {
+}
+Layer::~Layer() {
+}
+ 
 Linear::Linear(uint32_t in_dim, uint32_t out_dim) {
     //TODO more efficient weight initialization
     std::random_device rd;
@@ -17,12 +22,14 @@ Linear::Linear(uint32_t in_dim, uint32_t out_dim) {
     this->weight = Mat2d<float>(in_dim, out_dim, weight_init_data);
     this->bias = Mat2d<float>(1, out_dim, bias_init_data);
 
+    /*
     std::cout << std::endl;
     std::cout << "Mat2d<float> W: " << std::endl;
     (this->weight).print();
     std::cout << "Mat2d<float> b: " << std::endl;
     (this->bias).print();
     std::cout << std::endl;
+    */
 }
 Linear::~Linear() {
 }
@@ -62,12 +69,10 @@ LeakyReLU::~LeakyReLU() {
 Mat2d<float> LeakyReLU::forward(Mat2d<float>& x) {
 
     this->mask = (x <= 0);
-    //std::cout << "hello" << std::endl;
     // TODO more simple 
     Mat2d<float> out = x;
     Mat2d<float> neg_result = out[this->mask] * 0.2;
-    Mat2d<float> reverse_mask = reverse_boolean(this->mask);
-    Mat2d<float> pos_result = out[reverse_mask];
+    Mat2d<float> pos_result = out[!(this->mask)];
     return neg_result + pos_result;
 }
 
@@ -76,8 +81,7 @@ Mat2d<float> LeakyReLU::backward(const Mat2d<float>& dout) {
     //dx[this->mask] = dx[this->mask] * 0.2;
     Mat2d<float> dx = dout;
     Mat2d<float> neg_result = dx[this->mask] * 0.2;
-    Mat2d<float> reverse_mask = reverse_boolean(this->mask);
-    Mat2d<float> pos_result = dx[reverse_mask];
+    Mat2d<float> pos_result = dx[!(this->mask)];
     return neg_result + pos_result;
 }
 
@@ -88,7 +92,7 @@ Sigmoid::~Sigmoid() {
 }
 
 Mat2d<float> Sigmoid::forward(Mat2d<float>& x) {
-    this->out = ((float)1. / ((float)1. + exp(-x)));
+    this->out = ((float)1. / ((float)1. + Mat::exp(-x)));
     return this->out;
 }
 Mat2d<float> Sigmoid::backward(const Mat2d<float>& dout) {
@@ -107,7 +111,7 @@ SoftmaxWithLoss::~SoftmaxWithLoss() {
 float SoftmaxWithLoss::compute(Mat2d<float>& output, int target) {
     //TODO : Consider batch learning
     //
-    Mat2d<float> logit = exp(output - output.max());
+    Mat2d<float> logit = Mat::exp(output - output.max());
     Mat2d<float> S = logit.sum();
 
     this->y = logit / S(0, 0);

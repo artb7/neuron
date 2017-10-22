@@ -9,7 +9,7 @@
 
 class MLP {
 public:
-    MLP();
+    //MLP();
     MLP(uint32_t in_dim, uint32_t hidden_dim, uint32_t out_dim);
     ~MLP();
 
@@ -20,8 +20,11 @@ public:
     auto gradient(Mat2d<float> x, Mat2d<float> t);
 
 prviate:
-    vector<Layers> module;
+    vector<Layer*> module;
     SoftmaxWithLoss criterion;
+    uint32_t in_dim;
+    uint32_t hidden_dim;
+    uint32_t out_dim;
 };
 
 #endif //_MLP_H_

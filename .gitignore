@@ -1,6 +1,6 @@
 boost*
 neuron.c
-test_mat2d
+test_*
 main
 
 *.o
