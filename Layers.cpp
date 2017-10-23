@@ -34,18 +34,19 @@ Linear::Linear(uint32_t in_dim, uint32_t out_dim) {
 Linear::~Linear() {
 }
 
-Mat2d<float> Linear::forward(Mat2d<float>& x) {
+Mat2d<float> Linear::forward(const Mat2d<float>& x) {
     assert (x.get_col() == (this->weight).get_row());
     this->x = x;   
-    Mat2d<float> out = x.dot(this->weight) + this->bias;
+    Mat2d<float> out = (this->x).dot(this->weight) + this->bias;
 
     return out;
 }
 
-Mat2d<float> Linear::backward(Mat2d<float>& dout) {
+Mat2d<float> Linear::backward(const Mat2d<float>& dout) {
+    Mat2d<float> dy = dout;
     Mat2d<float> dx = dout.dot((this->weight).T());  
-    this->db = dout.sum(0); 
-    this->dW = ((this->x).T()).dot(dout);
+    this->db = dy.sum(0); 
+    this->dW = ((this->x).T()).dot(dy);
 
     /*
     std::cout << std::endl;
@@ -59,6 +60,13 @@ Mat2d<float> Linear::backward(Mat2d<float>& dout) {
     return dx;
 }
 
+Mat2d<float>* Linear::get_weight_ptr() {
+    return &weight;
+}
+
+Mat2d<float>* Linear::get_bias_ptr() {
+    return &bias;
+}
 
 LeakyReLU::LeakyReLU() {
     //this->mask = nullptr;
@@ -66,9 +74,10 @@ LeakyReLU::LeakyReLU() {
 LeakyReLU::~LeakyReLU() {
 }
 
-Mat2d<float> LeakyReLU::forward(Mat2d<float>& x) {
-
-    this->mask = (x <= 0);
+Mat2d<float> LeakyReLU::forward(const Mat2d<float>& x) {
+    
+    Mat2d<float> inp = x;
+    this->mask = (inp <= 0);
     // TODO more simple 
     Mat2d<float> out = x;
     Mat2d<float> neg_result = out[this->mask] * 0.2;
@@ -91,9 +100,11 @@ Sigmoid::Sigmoid() {
 Sigmoid::~Sigmoid() {
 }
 
-Mat2d<float> Sigmoid::forward(Mat2d<float>& x) {
-    this->out = ((float)1. / ((float)1. + Mat::exp(-x)));
-    return this->out;
+Mat2d<float> Sigmoid::forward(const Mat2d<float>& x) {
+    //TODO how to make the use of x
+    Mat2d<float> inp = x;
+    this->out = ((float)1. / ((float)1. + Mat::exp(-inp)));
+    return (this->out);
 }
 Mat2d<float> Sigmoid::backward(const Mat2d<float>& dout) {
     Mat2d<float> dx = dout;
@@ -108,9 +119,9 @@ SoftmaxWithLoss::~SoftmaxWithLoss() {
 
 }
 
-float SoftmaxWithLoss::compute(Mat2d<float>& output, int target) {
+float SoftmaxWithLoss::compute(const Mat2d<float>& output, const Mat2d<float>& target) {
     //TODO : Consider batch learning
-    //
+    //TODO : confirm target
     Mat2d<float> logit = Mat::exp(output - output.max());
     Mat2d<float> S = logit.sum();
 

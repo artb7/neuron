@@ -1,6 +1,7 @@
 #ifndef _MLP_H_
 #define _MLP_H_
 
+#include <string>
 #include <tuple>
 #include <vector>
 
@@ -19,8 +20,12 @@ public:
     auto numerical_gradient(Mat2d<float> x, Mat2d<float> t);
     auto gradient(Mat2d<float> x, Mat2d<float> t);
 
-prviate:
-    vector<Layer*> module;
+    void zero_grad();
+
+private:
+    //TODO: how to make hash-table for module and gradient 
+    std::vector<Layer*> module;
+    std::vector<std::tuple<std::string, Mat2d<float>*>> grads;
     SoftmaxWithLoss criterion;
     uint32_t in_dim;
     uint32_t hidden_dim;

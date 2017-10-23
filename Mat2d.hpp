@@ -79,8 +79,8 @@ public:
 	Mat2d(const Mat2d& other);
 	Mat2d<data_type>& operator = (const Mat2d& other);
 
-	uint32_t get_row();
-	uint32_t get_col();
+	uint32_t get_row() const;
+	uint32_t get_col() const;
 
     //void operator << (const Mat2d& t);
 
@@ -113,9 +113,9 @@ public:
 	Mat2d operator != (data_type num);
 
     Mat2d max();
-    Mat2d sum(int axis=-1);
+    Mat2d sum(int axis=-1) const;
 
-	Mat2d dot(const Mat2d& other);
+	Mat2d dot(const Mat2d& other) const;
     Mat2d T();
 
     void print();
@@ -188,12 +188,12 @@ Mat2d<data_type>& Mat2d<data_type>::operator = (const Mat2d& other) {
 }
 
 template <class data_type>
-uint32_t Mat2d<data_type>::get_row() { 
+uint32_t Mat2d<data_type>::get_row() const { 
     return this->row;
 }
 
 template <class data_type>
-uint32_t Mat2d<data_type>::get_col() {
+uint32_t Mat2d<data_type>::get_col() const {
     return this->col;
 }
 
@@ -625,7 +625,7 @@ Mat2d<data_type> Mat2d<data_type>::max() {
 }
 
 template <class data_type>
-Mat2d<data_type> Mat2d<data_type>::sum(int axis) {
+Mat2d<data_type> Mat2d<data_type>::sum(int axis) const {
     //TODO if axis=None, return sum of all elements
     assert (axis == -1 or axis == 0 or axis == 1);
 
@@ -660,7 +660,7 @@ Mat2d<data_type> Mat2d<data_type>::sum(int axis) {
 }
 
 template <class data_type>
-Mat2d<data_type> Mat2d<data_type>::dot(const Mat2d<data_type>& other) {
+Mat2d<data_type> Mat2d<data_type>::dot(const Mat2d<data_type>& other) const {
     assert (col == other.row);
     data_type result_data[row * other.col] = {0,}; 
     for (int i = 0; i < (int)row; ++i) {

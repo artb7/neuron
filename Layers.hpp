@@ -22,13 +22,16 @@ private:
 };
 
 
-class Linear : public {
+class Linear : public Layer {
 public:
     Linear(uint32_t in_dim, uint32_t out_dim);
     ~Linear();
 
-    Mat2d<float> forward(Mat2d<float>& x);
-    Mat2d<float> backward(Mat2d<float>& dout);
+    Mat2d<float> forward(const Mat2d<float>& x);
+    Mat2d<float> backward(const Mat2d<float>& dout);
+
+    Mat2d<float>* get_weight_ptr();
+    Mat2d<float>* get_bias_ptr();
 
 private:
     Mat2d<float> weight;
@@ -39,12 +42,12 @@ private:
 };
 
 
-class LeakyReLU : public {
+class LeakyReLU : public Layer {
 public:
     LeakyReLU();
     ~LeakyReLU();
 
-    Mat2d<float> forward(Mat2d<float>& x);
+    Mat2d<float> forward(const Mat2d<float>& x);
     Mat2d<float> backward(const Mat2d<float>& dout);
 
 private:
@@ -53,12 +56,12 @@ private:
 };
 
 
-class Sigmoid : public {
+class Sigmoid : public Layer {
 public:
     Sigmoid();
     ~Sigmoid();
 
-    Mat2d<float> forward(Mat2d<float>& x);
+    Mat2d<float> forward(const Mat2d<float>& x);
     Mat2d<float> backward(const Mat2d<float>& dout);
 
 private:
@@ -69,7 +72,8 @@ class SoftmaxWithLoss {
 public:
     SoftmaxWithLoss();
     ~SoftmaxWithLoss();
-    float compute(Mat2d<float>& output, int target);
+    //TODO float target ?
+    float compute(const Mat2d<float>& output, const Mat2d<float>& target);
     Mat2d<float> backward(const Mat2d<float>& dout);
 
 private:    

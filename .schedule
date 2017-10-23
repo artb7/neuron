@@ -16,8 +16,24 @@ Mat2d.hpp
 2017.10.21
     Mat2d Template ver.
     Prepare training of MLP with XOR data 
+        Add Mat::ones function
 
 2017.10.22
     Prepare training of MLP with XOR data 
+        Test Layers.hpp
+        Test Layers.hpp
+        Make Layer for polymorphism.
 
-
+2017.10.23
+    Prepare training of MLP with XOR data 
+        MLP.hpp
+            Add zero_grad
+        Layers.hpp
+            Add const to all input
+            But not complete
+        Mat2d.hpp
+            Add const to all input
+            But not complete
+        
+2017.10.24
+    todo : softmaxwithloss::compute(Mat2d&, Mat2d&)
