@@ -77,8 +77,8 @@ public:
     Mat2d<float> backward(const Mat2d<float>& dout);
 
 private:    
-    int t;
     Mat2d<float> dout;
+    Mat2d<float> t;
     Mat2d<float> y;
 };
 

@@ -48,16 +48,20 @@ int main() {
     std::cout << std::endl;
 
     // [Test] softmax 
-    //float out_data[10] = {0.1, 0.05, 0.6, 0.0, 0.05, 0.1, 0.0, 0.1, 0.0, 0.0};
-    float out_data[10] = {0.1, 0.05, 0.1, 0.0, 0.05, 0.1, 0.0, 0.6, 0.0, 0.0};
-    Mat2d<float> output(10, 1, out_data);
-    int target = 2;
+    //float out_data[10] = 
+    float out_data[2 * 10] = {
+        0.1, 0.05, 0.6, 0.0, 0.05, 0.1, 0.0, 0.1, 0.0, 0.0, 
+        0.1, 0.05, 0.1, 0.0, 0.05, 0.1, 0.0, 0.6, 0.0, 0.0
+    };
+    float target_data[2] = {2, 2};
+    Mat2d<float> output(2, 10, out_data);
+    Mat2d<float> target(2, 1, target_data);
 
     SoftmaxWithLoss criterion = SoftmaxWithLoss();
     std::cout << "Mat2d output: " << std::endl;
     output.print();
     std::cout << "Mat2d target: " << std::endl;
-    std::cout << target << std::endl;
+    target.print();
     std::cout << "Mat2d criterion.compute(output, target): " << std::endl;
     std::cout << criterion.compute(output, target) << std::endl;
     std::cout << "Mat2d criterion.backward(dout = 1): " << std::endl;

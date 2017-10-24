@@ -120,15 +120,23 @@ SoftmaxWithLoss::~SoftmaxWithLoss() {
 }
 
 float SoftmaxWithLoss::compute(const Mat2d<float>& output, const Mat2d<float>& target) {
-    //TODO : Consider batch learning
-    //TODO : confirm target
-    Mat2d<float> logit = Mat::exp(output - output.max());
+
+    Mat2d<float> outp = output;
+    //TODO : fix the bug of outp.max and compute logit. consider axis
+    float max_num = (outp.max())(0,0);
+    Mat2d<float> logit = Mat::exp(outp - max_num);
     Mat2d<float> S = logit.sum();
 
     this->y = logit / S(0, 0);
     this->t = target;
-    float loss = -1 * std::log(y(target, 0) + 1e-7);
 
+    int batch_size = t.get_row();
+    float loss = 0;
+    for (int i = 0; i < batch_size; ++i) {
+        int index = (int)(t(i, 0));
+        loss += -1 * std::log(y(i, index) + 1e-7);
+    }
+    loss /= batch_size;
     /*
     std::cout << "output - output.max()" << std::endl;
     tensor_print(output - output.max());
@@ -140,14 +148,17 @@ float SoftmaxWithLoss::compute(const Mat2d<float>& output, const Mat2d<float>& t
     tensor_print(this->y);
     std::cout << "loss: " << loss  << std::endl;
     */
-
     return loss;
 }
 
 Mat2d<float> SoftmaxWithLoss::backward(const Mat2d<float>& dout) {
     this->dout = dout;
     Mat2d<float> dx = this->y;
-    dx(this->t, 0) = dx(this->t, 0) - 1.0;
+    int batch_size = t.get_row();
+    for (int i = 0; i < batch_size; ++i) {
+        dx(i, t(i, 0)) = dx(i, t(i, 0)) - 1.0;
+    }
+    dx = dx / batch_size;
     return dx;
 }
 

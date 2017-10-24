@@ -36,4 +36,10 @@ Mat2d.hpp
             But not complete
         
 2017.10.24
+    Prepare training of MLP with XOR data 
+        Test test_layers.cpp 
+        softmaxwithloss::compute(Mat2d&, Mat2d&)
+            not complete
+
+2017.10.25
     todo : softmaxwithloss::compute(Mat2d&, Mat2d&)
