@@ -12,6 +12,7 @@ Mat2d.hpp
     Tensor (4 dim Mat for (B, C, W, H))
     Image data loading
     Conv2d
+    c++ style
 
 2017.10.21
     Mat2d Template ver.
@@ -22,7 +23,7 @@ Mat2d.hpp
     Prepare training of MLP with XOR data 
         Test Layers.hpp
         Test Layers.hpp
-        Make Layer for polymorphism.
+        Make Layer ABClass for polymorphism.
 
 2017.10.23
     Prepare training of MLP with XOR data 
@@ -42,4 +43,16 @@ Mat2d.hpp
             not complete
 
 2017.10.25
-    todo : softmaxwithloss::compute(Mat2d&, Mat2d&)
+    Prepare training of MLP with XOR data 
+        Complete softmaxwithloss::compute(Mat2d&, Mat2d&)
+        Add row and col match exception as runtime error
+        Complete forward
+
+2017.10.26
+    Prepare training of MLP with XOR data 
+        todo
+        complete zero_grad
+        backward
+        training
+
+2017.10.27

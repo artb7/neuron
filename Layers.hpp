@@ -9,7 +9,7 @@
 #include "Mat2d.hpp"
 
 
-//TODO make use of hepa and release resource
+//TODO make use of heap and release resource
 class Layer {
 public:
 	Layer();

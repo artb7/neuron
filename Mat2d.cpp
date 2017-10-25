@@ -76,12 +76,16 @@ Mat2d Mat2d::operator - () {
 }
 
 float& Mat2d::operator () (uint32_t row, uint32_t col) {
-    assert (row < this->row && col < this->col);
+    if !(row < this->row && col < this->col)
+        throw std::runtime_error(
+            "[!] Error : miss match of row and col");
     return data[row * this->col + col];	
 }
 
 Mat2d Mat2d::operator [] (const Mat2d& other) {
-    assert (row == other.row && col == other.col);
+    if !(row == other.row && col == other.col)
+        throw std::runtime_error(
+            "[!] Error : miss match of row and col");
 	float result_data[row * col] = {0,};
         // TODO 1 -> true
 	for (int i = 0; i < (int)row; ++i) {
@@ -99,9 +103,11 @@ Mat2d Mat2d::operator [] (const Mat2d& other) {
 }
 
 Mat2d Mat2d::operator + (const Mat2d& other) {
-    assert ((row == other.row && col == other.col) or\
+    if !((row == other.row && col == other.col) or\
             (row == other.row && other.col == 1) or\
-            (col == other.col && other.row == 1));
+            (col == other.col && other.row == 1))
+        throw std::runtime_error(
+            "[!] Error : miss match of row and col");
     float result_data[row * col] = {0,};
     if (row == other.row && other.col == 1) {
         for (int i = 0; i < (int)row; ++i) {
@@ -132,9 +138,11 @@ Mat2d Mat2d::operator + (const Mat2d& other) {
 
 
 Mat2d Mat2d::operator - (const Mat2d& other) {
-    assert ((row == other.row && col == other.col) or\
+    if !((row == other.row && col == other.col) or\
             (row == other.row && other.col == 1) or\
-            (col == other.col && other.row == 1));
+            (col == other.col && other.row == 1))
+        throw std::runtime_error(
+            "[!] Error : miss match of row and col");
     float result_data[row * col] = {0,};
     if (row == other.row && other.col == 1) {
         for (int i = 0; i < (int)row; ++i) {
@@ -165,9 +173,11 @@ Mat2d Mat2d::operator - (const Mat2d& other) {
 
 
 Mat2d Mat2d::operator * (const Mat2d& other) {
-    assert ((row == other.row && col == other.col) or\
+    if !((row == other.row && col == other.col) or\
             (row == other.row && other.col == 1) or\
-            (col == other.col && other.row == 1));
+            (col == other.col && other.row == 1))
+        throw std::runtime_error(
+            "[!] Error : miss match of row and col");
     float result_data[row * col] = {0,};
     if (row == other.row && other.col == 1) {
         for (int i = 0; i < (int)row; ++i) {
@@ -198,9 +208,11 @@ Mat2d Mat2d::operator * (const Mat2d& other) {
 
 
 Mat2d Mat2d::operator / (const Mat2d& other) {
-    assert ((row == other.row && col == other.col) or\
+    if !((row == other.row && col == other.col) or\
             (row == other.row && other.col == 1) or\
-            (col == other.col && other.row == 1));
+            (col == other.col && other.row == 1))
+        throw std::runtime_error(
+            "[!] Error : miss match of row and col");
     for (int i = 0; i < (int)row; ++i) {
         for(int j = 0; j < (int)col; ++j) {
             if (other.data[i * col + j] == 0) { 
@@ -241,7 +253,9 @@ Mat2d Mat2d::operator / (const Mat2d& other) {
 
 
 Mat2d Mat2d::operator < (const Mat2d& other) {	
-    assert (row == other.row && col == other.col);
+    if !(row == other.row && col == other.col)
+        throw std::runtime_error(
+            "[!] Error : miss match of row and col");
     float result_data[row * col] = {0,};
     //float* result_data = new float[row * col];
     for (int i = 0; i < (int)row; ++i) {
@@ -255,7 +269,9 @@ Mat2d Mat2d::operator < (const Mat2d& other) {
 }
 
 Mat2d Mat2d::operator <= (const Mat2d& other) {
-	assert (row == other.row && col == other.col);
+	if !(row == other.row && col == other.col)
+        throw std::runtime_error(
+            "[!] Error : miss match of row and col");
 	float result_data[row * col] = {0,};
 	//float* result_data = new float[row * col];
 	for (int i = 0; i < (int)row; ++i) {
@@ -269,7 +285,9 @@ Mat2d Mat2d::operator <= (const Mat2d& other) {
 }
 
 Mat2d Mat2d::operator > (const Mat2d& other) {
-	assert (row == other.row && col == other.col);
+	if !(row == other.row && col == other.col)
+        throw std::runtime_error(
+            "[!] Error : miss match of row and col");
 	float result_data[row * col] = {0,};
 	//float* result_data = new float[row * col];
 	for (int i = 0; i < (int)row; ++i) {
@@ -282,7 +300,9 @@ Mat2d Mat2d::operator > (const Mat2d& other) {
 	return Mat2d(row, col, result_data);
 }
 Mat2d Mat2d::operator >= (const Mat2d& other) {
-	assert (row == other.row && col == other.col);
+	if !(row == other.row && col == other.col)
+        throw std::runtime_error(
+            "[!] Error : miss match of row and col");
 	float result_data[row * col] = {0,};
 	//float* result_data = new float[row * col];
 	for (int i = 0; i < (int)row; ++i) {
@@ -296,7 +316,9 @@ Mat2d Mat2d::operator >= (const Mat2d& other) {
 }
 
 Mat2d Mat2d::operator == (const Mat2d& other) {
-	assert (row == other.row && col == other.col);
+	if !(row == other.row && col == other.col)
+        throw std::runtime_error(
+            "[!] Error : miss match of row and col");
 	float result_data[row * col] = {0,};
 	for (int i = 0; i < (int)row; ++i) {
 		for (int j = 0; j < (int)col; ++j) {
@@ -309,7 +331,9 @@ Mat2d Mat2d::operator == (const Mat2d& other) {
 }
 
 Mat2d Mat2d::operator != (const Mat2d& other) {
-	assert (row == other.row && col == other.col);
+	if !(row == other.row && col == other.col)
+        throw std::runtime_error(
+            "[!] Error : miss match of row and col");
 	float result_data[row * col] = {0,};
 	//float* result_data = new float[row * col];
 	for (int i = 0; i < (int)row; ++i) {
@@ -363,7 +387,9 @@ Mat2d Mat2d::operator * (float num) {
 
 Mat2d Mat2d::operator / (float num) {
 
-    assert (num != 0);
+    if !(num != 0)
+        throw std::runtime_error(
+            "[!] Error : denomitor is zero");
 
     float result_data[row * col] = {0,};
     for (int i = 0; i < (int)row; ++i) {
@@ -454,7 +480,9 @@ Mat2d Mat2d::max() {
 
 Mat2d Mat2d::sum(int axis) {
     //TODO if axis=None, return sum of all elements
-    assert (axis == -1 or axis == 0 or axis == 1);
+    if !(axis == -1 or axis == 0 or axis == 1)
+        throw std::runtime_error(
+            "[!] Error : axis is wrong -> %d" % axis);
 
     if (axis == -1) {
         float sum[1] = {0};
@@ -487,7 +515,9 @@ Mat2d Mat2d::sum(int axis) {
 }
 
 Mat2d Mat2d::dot(const Mat2d& other) {
-    assert (col == other.row);
+    if !(col == other.row) 
+        throw std::runtime_error(
+            "[!] Error : miss match of row and col");
     float result_data[row * other.col] = {0,}; 
     for (int i = 0; i < (int)row; ++i) {
         for (int j = 0; j < (int)other.col; ++j) {

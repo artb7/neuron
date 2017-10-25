@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <iostream>
 #include <stdint.h>
+#include <stdexcept>
 
 
 /******* Template version *******/
@@ -51,7 +52,7 @@ public:
 	Mat2d operator == (data_type num);
 	Mat2d operator != (data_type num);
 
-    Mat2d max();
+    Mat2d max(int axis=-1);
     Mat2d sum(int axis=-1) const;
 
 	Mat2d dot(const Mat2d& other) const;
@@ -291,12 +292,14 @@ Mat2d<data_type> Mat2d<data_type>::operator * (const Mat2d<data_type>& other) {
 
 template <class data_type>
 Mat2d<data_type> Mat2d<data_type>::operator / (const Mat2d<data_type>& other) {
+
     assert ((row == other.row && col == other.col) or\
             (row == other.row && other.col == 1) or\
             (col == other.col && other.row == 1));
-    for (int i = 0; i < (int)row; ++i) {
-        for(int j = 0; j < (int)col; ++j) {
-            if (other.data[i * col + j] == 0) { 
+
+    for (int i = 0; i < (int)other.row; ++i) {
+        for(int j = 0; j < (int)other.col; ++j) {
+            if (other.data[i * other.col + j] == 0) { 
                 throw "Zero division Error";
             }
         }
@@ -550,17 +553,45 @@ Mat2d<data_type> Mat2d<data_type>::operator != (data_type num) {
 }
 
 template <class data_type>
-Mat2d<data_type> Mat2d<data_type>::max() {
-    data_type max_data[1] = {data[0]};
-    for (int i = 0; i < (int)row; ++i) {
-        for (int j = 0; j < (int)col; ++j) {
-            int index = i * col + j;
-            max_data[0] = max_data[0] >= data[index] ?\
-                            max_data[0] : data[index];
+Mat2d<data_type> Mat2d<data_type>::max(int axis) {
+    assert (axis == -1 or axis == 0 or axis == 1);
 
+    if (axis == -1) {
+        data_type max_data[1] = {data[0]};
+        for (int i = 0; i < (int)row; ++i) {
+            for (int j = 0; j < (int)col; ++j) {
+                int index = i * col + j;
+                max_data[0] = max_data[0] >= data[index] ?\
+                                max_data[0] : data[index];
+
+            }
         }
+        return Mat2d<data_type>(1, 1, max_data);
     }
-    return Mat2d<data_type>(1, 1, max_data);
+
+    uint32_t result_dim = (axis == 0) ? col : row;
+    data_type result_data[result_dim] = {0,};
+    if (axis == 0) {
+        for (int i = 0; i < (int)row; ++i) {
+            for (int j = 0; j < (int)col; ++j) {
+                int index = i * col + j;
+                result_data[j] = result_data[j] >= data[index] ?\
+                                 result_data[j] : data[index];
+            }
+        }
+        return Mat2d<data_type>(1, result_dim, result_data);
+    }
+    else {
+        for (int i = 0; i < (int)row; ++i) {
+            for (int j = 0; j < (int)col; ++j) {
+                int index = i * col + j;
+                result_data[i] = result_data[i] >= data[index] ?\
+                                 result_data[i] : data[index];
+            }
+        }
+        return Mat2d<data_type>(result_dim, 1, result_data);
+    }
+
 }
 
 template <class data_type>

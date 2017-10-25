@@ -122,12 +122,10 @@ SoftmaxWithLoss::~SoftmaxWithLoss() {
 float SoftmaxWithLoss::compute(const Mat2d<float>& output, const Mat2d<float>& target) {
 
     Mat2d<float> outp = output;
-    //TODO : fix the bug of outp.max and compute logit. consider axis
-    float max_num = (outp.max())(0,0);
-    Mat2d<float> logit = Mat::exp(outp - max_num);
-    Mat2d<float> S = logit.sum();
+    Mat2d<float> logit = Mat::exp(outp - outp.max(1));
+    Mat2d<float> S = logit.sum(1);
 
-    this->y = logit / S(0, 0);
+    this->y = logit / S;
     this->t = target;
 
     int batch_size = t.get_row();
@@ -155,9 +153,16 @@ Mat2d<float> SoftmaxWithLoss::backward(const Mat2d<float>& dout) {
     this->dout = dout;
     Mat2d<float> dx = this->y;
     int batch_size = t.get_row();
+
     for (int i = 0; i < batch_size; ++i) {
         dx(i, t(i, 0)) = dx(i, t(i, 0)) - 1.0;
     }
+
+    std::cout << "y: " << std::endl;
+    (this->y).print();
+    std::cout << "dx: " << std::endl;
+    dx.print();
+
     dx = dx / batch_size;
     return dx;
 }

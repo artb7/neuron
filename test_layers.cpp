@@ -49,13 +49,14 @@ int main() {
 
     // [Test] softmax 
     //float out_data[10] = 
-    float out_data[2 * 10] = {
-        0.1, 0.05, 0.6, 0.0, 0.05, 0.1, 0.0, 0.1, 0.0, 0.0, 
-        0.1, 0.05, 0.1, 0.0, 0.05, 0.1, 0.0, 0.6, 0.0, 0.0
+    int batch_size = 2;
+    float out_data[batch_size * 10] = {
+        0.1, 0.05, 0.9, 0.0, 0.05, 0.1, 0.0, 0.1, 0.0, 0.0, 
+        0.1, 0.05, 0.1, 0.0, 0.05, 0.1, 0.0, 0.9, 0.0, 0.0
     };
-    float target_data[2] = {2, 2};
-    Mat2d<float> output(2, 10, out_data);
-    Mat2d<float> target(2, 1, target_data);
+    float target_data[batch_size] = {2, 2};
+    Mat2d<float> output(batch_size, 10, out_data);
+    Mat2d<float> target(batch_size, 1, target_data);
 
     SoftmaxWithLoss criterion = SoftmaxWithLoss();
     std::cout << "Mat2d output: " << std::endl;
