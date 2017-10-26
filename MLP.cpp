@@ -38,28 +38,26 @@ float MLP::loss(Mat2d<float>& x, Mat2d<float>& t) {
     return criterion.compute(out, t); 
 }
 
-Mat2d<float> MLP::numerical_gradient(Mat2d<float>& x, Mat2d<float>& t) {
+std::vector<std::tuple<std::string, Mat2d<float>>> MLP::numerical_gradient(Mat2d<float>& x, Mat2d<float>& t) {
     //TODO : make
-    return x + t;
+    return grads;
 }
-Mat2d<float> MLP::gradient(Mat2d<float>& x, Mat2d<float>& t){
+std::vector<std::tuple<std::string, Mat2d<float>>> MLP::gradient(Mat2d<float>& x, Mat2d<float>& t){
     loss(x, t);
     Mat2d<float> dout = Mat::ones(t.get_row(), this->out_dim);
 
     for (int i = module.size() - 1; i >= 0; --i) {
         dout = module[i]->backward(dout);
     }
-    return x;    
+    return grads;    
 }
 
 void MLP::zero_grad() {
     
-    /*
-    for (int i = 0; i < grads.size(); ++i) {
-        grad = std::get<1>(grads[i]);
-        grad = 0;
+    // TODO use iterator
+    for (int i = 0; i < (int)grads.size(); ++i) {
+        std::get<1>(grads[i]).fill_zeros();
     }
-    */
 
     /*
     Mat2d<float>* pW; 

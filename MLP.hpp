@@ -18,8 +18,8 @@ public:
     Mat2d<float> predict(Mat2d<float>& x);
     float loss(Mat2d<float>& x, Mat2d<float>& t);
     //auto accuracy(Mat2d<float> x, Mat2d<float> t);
-    Mat2d<float> numerical_gradient(Mat2d<float>& x, Mat2d<float>& t);
-    Mat2d<float> gradient(Mat2d<float>& x, Mat2d<float>& t);
+    std::vector<std::tuple<std::string, Mat2d<float>>> numerical_gradient(Mat2d<float>& x, Mat2d<float>& t);
+    std::vector<std::tuple<std::string, Mat2d<float>>> gradient(Mat2d<float>& x, Mat2d<float>& t);
 
     void zero_grad();
 

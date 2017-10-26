@@ -7,6 +7,7 @@ Layer::~Layer() {
  
 Linear::Linear(uint32_t in_dim, uint32_t out_dim) {
     //TODO more efficient weight initialization
+    //TODO how to choose random seed
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<float> dis(-1.0, 1.0);

@@ -7,6 +7,7 @@
 #include <iostream>
 #include <stdint.h>
 #include <stdexcept>
+#include <string.h>
 
 
 /******* Template version *******/
@@ -57,6 +58,9 @@ public:
 
 	Mat2d dot(const Mat2d& other) const;
     Mat2d T();
+
+    void fill_zeros();
+    void fill(data_type num);
 
     void print();
 
@@ -659,6 +663,22 @@ Mat2d<data_type> Mat2d<data_type>::T() {
     return Mat2d<data_type>(col, row, result_data);
 }
 
+template <class data_type>
+void Mat2d<data_type>::fill_zeros() {
+    memset(data, 0, sizeof(data));
+    return;
+}
+
+template <class data_type>
+void Mat2d<data_type>::fill(data_type num) {
+    for (int i = 0; i < (int)row; ++i) {
+        for (int j = 0; j < (int)col; ++j) {
+            int index = i * col + j;
+            data[index] = num;
+        }
+    }
+    return;
+}
 
 template <class data_type>
 void Mat2d<data_type>::print() {
