@@ -61,12 +61,20 @@ Mat2d<float> Linear::backward(const Mat2d<float>& dout) {
     return dx;
 }
 
-Mat2d<float>* Linear::get_weight_ptr() {
+Mat2d<float>* Linear::get_pWeight() {
     return &weight;
 }
 
-Mat2d<float>* Linear::get_bias_ptr() {
+Mat2d<float>* Linear::get_pBias() {
     return &bias;
+}
+
+Mat2d<float> Linear::get_dW() {
+    return dW;
+}
+
+Mat2d<float> Linear::get_db() {
+    return db;
 }
 
 LeakyReLU::LeakyReLU() {
@@ -120,7 +128,7 @@ SoftmaxWithLoss::~SoftmaxWithLoss() {
 
 }
 
-float SoftmaxWithLoss::compute(const Mat2d<float>& output, const Mat2d<float>& target) {
+Mat2d<float> SoftmaxWithLoss::compute(const Mat2d<float>& output, const Mat2d<float>& target) {
 
     Mat2d<float> outp = output;
     Mat2d<float> logit = Mat::exp(outp - outp.max(1));
@@ -130,12 +138,13 @@ float SoftmaxWithLoss::compute(const Mat2d<float>& output, const Mat2d<float>& t
     this->t = target;
 
     int batch_size = t.get_row();
-    float loss = 0;
+    float loss_data[1] = {0};
     for (int i = 0; i < batch_size; ++i) {
         int index = (int)(t(i, 0));
-        loss += -1 * std::log(y(i, index) + 1e-7);
+        loss_data[0] += -1 * std::log(y(i, index) + 1e-7);
     }
-    loss /= batch_size;
+    loss_data[0] /= batch_size;
+    Mat2d<float> loss(1, 1, loss_data); 
     /*
     std::cout << "output - output.max()" << std::endl;
     tensor_print(output - output.max());
@@ -159,10 +168,12 @@ Mat2d<float> SoftmaxWithLoss::backward(const Mat2d<float>& dout) {
         dx(i, t(i, 0)) = dx(i, t(i, 0)) - 1.0;
     }
 
+    /*
     std::cout << "y: " << std::endl;
     (this->y).print();
     std::cout << "dx: " << std::endl;
     dx.print();
+    */
 
     dx = dx / batch_size;
     return dx;

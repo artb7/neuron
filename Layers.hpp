@@ -13,7 +13,7 @@
 class Layer {
 public:
 	Layer();
-	~Layer();
+	virtual ~Layer();
 
 	virtual Mat2d<float> forward(const Mat2d<float>& x) = 0;
 	virtual Mat2d<float> backward(const Mat2d<float>& dout) = 0;
@@ -30,8 +30,10 @@ public:
     Mat2d<float> forward(const Mat2d<float>& x);
     Mat2d<float> backward(const Mat2d<float>& dout);
 
-    Mat2d<float>* get_weight_ptr();
-    Mat2d<float>* get_bias_ptr();
+    Mat2d<float>* get_pWeight();
+    Mat2d<float>* get_pBias();
+    Mat2d<float> get_dW();
+    Mat2d<float> get_db();
 
 private:
     Mat2d<float> weight;
@@ -73,7 +75,7 @@ public:
     SoftmaxWithLoss();
     ~SoftmaxWithLoss();
     //TODO float target ?
-    float compute(const Mat2d<float>& output, const Mat2d<float>& target);
+    Mat2d<float> compute(const Mat2d<float>& output, const Mat2d<float>& target);
     Mat2d<float> backward(const Mat2d<float>& dout);
 
 private:    

@@ -1,6 +1,5 @@
 boost*
 neuron.c
-test_*
 main
 
 *.o
