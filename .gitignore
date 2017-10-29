@@ -1,6 +1,10 @@
 boost*
 neuron.c
 main
+test.cpp
+test.py
+test_mlp
+
 
 *.o
 *.swp
