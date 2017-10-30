@@ -5,10 +5,13 @@
 
 class Optim {
 public:
-    Optim();
+    Optim(float lr);
     ~Optim();
 
-    update();
+    void set_params(vector<Mat2d<float>*> params);
+    void set_grads(vector<Mat2d<float>*> params);
+    void zero_grad();
+    void update();
 
 private:
     vector<Mat2d<float>*> params;
