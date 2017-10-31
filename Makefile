@@ -1,8 +1,6 @@
 CC = g++
 CFLAGS = -W -Wall -g -std=c++17
-#TARGET = test_mat2d
-#TARGET = test_layers
-TARGET = test_mlp
+TARGET = main 
 
 #$(TARGET) : test_mat2d.o Mat2d.hpp.gch
 #	$(CC) $(CFLAGS) -o $(TARGET) test_mat2d.o
@@ -13,6 +11,8 @@ TARGET = test_mlp
 
 $(TARGET) : test_mlp.o Layers.o Mat2d.hpp.gch MLP.o
 	$(CC) $(CFLAGS) -o $(TARGET) test_mlp.o Layers.o MLP.o
+
+$(TARGET) : main.o test_layers
 
 test_layers.o : test_layers.cpp Layers.hpp Mat2d.hpp 
 	$(CC) $(CFLAGS) -c test_layers.cpp

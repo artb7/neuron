@@ -17,6 +17,7 @@ public:
 
 	virtual Mat2d<float> forward(const Mat2d<float>& x) = 0;
 	virtual Mat2d<float> backward(const Mat2d<float>& dout) = 0;
+    virtual bool has_params() = 0;
 
 private:
 };
@@ -27,8 +28,9 @@ public:
     Linear(uint32_t in_dim, uint32_t out_dim);
     ~Linear();
 
-    Mat2d<float> forward(const Mat2d<float>& x);
-    Mat2d<float> backward(const Mat2d<float>& dout);
+    virtual Mat2d<float> forward(const Mat2d<float>& x);
+    virtual Mat2d<float> backward(const Mat2d<float>& dout);
+    virtual bool has_params();
 
     Mat2d<float>* get_pWeight();
     Mat2d<float>* get_pBias();
@@ -51,6 +53,7 @@ public:
 
     Mat2d<float> forward(const Mat2d<float>& x);
     Mat2d<float> backward(const Mat2d<float>& dout);
+    virtual bool has_params();
 
 private:
     //TODO float mask no problem?
@@ -65,10 +68,49 @@ public:
 
     Mat2d<float> forward(const Mat2d<float>& x);
     Mat2d<float> backward(const Mat2d<float>& dout);
+    virtual bool has_params();
 
 private:
     Mat2d<float> out;
 };
+
+
+class Add_block : public Layer{
+public:
+	Add_block(uint32_t num_branch);
+	virtual ~Add_block();
+
+	virtual Mat2d<float> forward(const Mat2d<float>& x);
+	virtual Mat2d<float> backward(const Mat2d<float>& dout);
+    virtual bool has_params();
+
+    void add(Sequential* layers);
+
+private:
+    uint32_t num_branch;
+    vector<Sequential*> branches;
+    //Sequential* branches;
+    uint32_t in_row;
+    uint32_t in_col;
+};
+
+class Sequential : public Layer {
+public:
+	Sequential(uint32_t num_layer);
+	virtual ~Sequential();
+
+	virtual Mat2d<float> forward(const Mat2d<float>& x);
+	virtual Mat2d<float> backward(const Mat2d<float>& dout);
+    virtual bool has_params();
+
+    void add(Layer* layer);
+
+private:
+    uint32_t num_layer;
+    vector<Layer*> layers;
+    //Layer* layers;
+};
+//TODO mul_block, cat_block
 
 class SoftmaxWithLoss {
 public:

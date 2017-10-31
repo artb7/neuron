@@ -61,6 +61,10 @@ Mat2d<float> Linear::backward(const Mat2d<float>& dout) {
     return dx;
 }
 
+virtual bool Linear::has_params() {
+    return true;
+}
+
 Mat2d<float>* Linear::get_pWeight() {
     return &weight;
 }
@@ -103,6 +107,9 @@ Mat2d<float> LeakyReLU::backward(const Mat2d<float>& dout) {
     return neg_result + pos_result;
 }
 
+bool LearkyReLU::has_params() {
+    return false;
+}
 
 Sigmoid::Sigmoid() {
 }
@@ -120,12 +127,92 @@ Mat2d<float> Sigmoid::backward(const Mat2d<float>& dout) {
     return dx * this->out * ((float)1.0 - this->out);
 }
 
+bool Sigmoid::has_params() {
+    return false;
+}
+
+Add_block::Add_block(uint32_t num_branch) {
+    this->num_branch = num_branch;
+    this->branches = new Sequential*[num_branch];
+}
+Add_block::~Add_block() {
+    for (int i = 0; i < num_branch; ++i) {
+        delete branches[i];
+    }
+}
+
+Mat2d<float> Add_block::forward(const Mat2d<float>& x) {
+    this->in_row = x.get_row();
+    this->in_col = x.get_col();
+    Mat2d<float> out = x;
+    for (int i = 0; i < (int)num_branch; ++i) {
+        out = branches[i]->forward(out);
+    }
+    return out;
+}
+
+Mat2d<float> Add_block::backward(const Mat2d<float>& dout) {
+    Mat2d<float> ret = Mat::zeros(in_row, in_col);
+    for (int i = 0; i < (int)num_branch; ++i) {
+        ret = ret + branches[i]->backward(dout);
+    }
+    return ret;
+}
+
+bool Add_block::has_params() {
+    for (int i = 0; i < (int)num_branch; ++i) {
+        if (branches[i]->has_params())
+            return true;
+    }
+    return false;
+}
+
+void Add_block::add(Sequential* layers) {
+    branches.push_back(layers);
+}
+
+Sequential::Sequential(uint32_t num_layer) {
+    this->num_layer = num_layer;
+}
+Sequential::~Sequential() {
+    for (int i = 0; i < (int)num_layer; ++i) {
+        delete layers[i];
+    }
+};
+
+Mat2d<float> Sequential::forward(const Mat2d<float>& x) {
+    Mat2d<float> out = x;
+    for (int i = 0; i < (int)num_layer; ++i) {
+        out = layers[i]->forward(out);
+    }
+    return out;
+}
+
+Mat2d<float> Sequential::backward(const Mat2d<float>& dout) {
+    Mat<float> din = dout;
+    for (int i = (int)num_layer - 1; i >= 0; --i) {
+        din = layers[i]->backward(din);
+    }
+    return din;
+}
+
+bool Sequential::has_params() {
+    for (int i = 0; i < (int)num_layer; ++i) {
+        if (layers[i]->has_params())
+            return true;
+    }
+    return false;
+}
+
+void Sequential::add(Layer* layer) {
+    layers.push_back(layer);
+}
+
+
 SoftmaxWithLoss::SoftmaxWithLoss() {
-    
 }
 
 SoftmaxWithLoss::~SoftmaxWithLoss() {
-
 }
 
 Mat2d<float> SoftmaxWithLoss::compute(const Mat2d<float>& output, const Mat2d<float>& target) {
@@ -175,7 +262,9 @@ Mat2d<float> SoftmaxWithLoss::backward(const Mat2d<float>& dout) {
     dx.print();
     */
 
-    dx = dx / batch_size;
+    dx = (dx / batch_size) 
+    //TODO : need multiply by dout ? dout is always 1 ?
+    //dx = dx * this->dout;
     return dx;
 }
 
